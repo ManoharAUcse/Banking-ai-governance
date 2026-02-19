@@ -1,19 +1,33 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Login() {
   const [role, setRole] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    if (role) {
-      localStorage.setItem("role", role);
-      localStorage.setItem("isLoggedIn", "true"); // ✅ Important
+  const handleLogin = async () => {
+    if (!role) {
+      return alert("Please select a role");
+    }
 
+    try {
+      // 🔥 Call backend login API
+      await axios.post("http://localhost:5000/api/login", {
+        role: role
+      });
+
+      // Store in localStorage for route protection
+      localStorage.setItem("role", role);
+      localStorage.setItem("isLoggedIn", "true");
+
+      // Navigate based on role
       if (role === "admin") navigate("/dashboard");
       if (role === "auditor") navigate("/loan-bias");
-    } else {
-      alert("Please select a role");
+
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Login failed");
     }
   };
 
