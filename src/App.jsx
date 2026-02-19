@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import Dashboard from "./components/Dashboard";
@@ -11,8 +11,10 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Login */}
         <Route path="/" element={<Login />} />
 
+        {/* Dashboard */}
         <Route
           path="/dashboard"
           element={
@@ -26,6 +28,7 @@ function App() {
           }
         />
 
+        {/* Loan Bias */}
         <Route
           path="/loan-bias"
           element={
@@ -39,6 +42,7 @@ function App() {
           }
         />
 
+        {/* Fraud Monitor */}
         <Route
           path="/fraud"
           element={
@@ -51,6 +55,9 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* Unknown Route */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   );

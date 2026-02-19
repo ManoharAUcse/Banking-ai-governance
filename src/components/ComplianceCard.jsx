@@ -1,33 +1,42 @@
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
+
 function ComplianceCard() {
+  const data = [
+    { name: "Compliant", value: 91 },
+    { name: "Non-Compliant", value: 9 }
+  ];
+
+  const COLORS = ["#22c55e", "#ef4444"];
+
   const cardStyle = {
     background: "white",
-    padding: "20px",
-    borderRadius: "10px",
-    width: "220px",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.1)"
+    padding: "30px",
+    borderRadius: "12px",
+    boxShadow: "0 10px 25px rgba(0,0,0,0.08)"
   };
 
   return (
-    <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
-      <div style={cardStyle}>
-        <h4>Model Accuracy</h4>
-        <h2 style={{ color: "green" }}>92%</h2>
-      </div>
+    <div style={cardStyle}>
+      <h2 style={{ marginBottom: "20px" }}>
+        Compliance Overview
+      </h2>
 
-      <div style={cardStyle}>
-        <h4>Bias Level</h4>
-        <h2 style={{ color: "orange" }}>Low</h2>
-      </div>
-
-      <div style={cardStyle}>
-        <h4>Fraud Alerts</h4>
-        <h2 style={{ color: "red" }}>12</h2>
-      </div>
-
-      <div style={cardStyle}>
-        <h4>Compliance Status</h4>
-        <h2 style={{ color: "green" }}>Compliant</h2>
-      </div>
+      <ResponsiveContainer width="100%" height={300}>
+        <PieChart>
+          <Pie
+            data={data}
+            dataKey="value"
+            outerRadius={100}
+            label
+          >
+            {data.map((entry, index) => (
+              <Cell key={index} fill={COLORS[index]} />
+            ))}
+          </Pie>
+          <Tooltip />
+          <Legend />
+        </PieChart>
+      </ResponsiveContainer>
     </div>
   );
 }

@@ -6,17 +6,20 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-  if (role) {
-    localStorage.setItem("role", role);
+    if (role) {
+      localStorage.setItem("role", role);
+      localStorage.setItem("isLoggedIn", "true"); // ✅ Important
 
-    if (role === "admin") navigate("/dashboard");
-    if (role === "auditor") navigate("/loan-bias");
-  }
-};
+      if (role === "admin") navigate("/dashboard");
+      if (role === "auditor") navigate("/loan-bias");
+    } else {
+      alert("Please select a role");
+    }
+  };
 
   return (
     <div
-      style={{
+      style={{git 
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -28,6 +31,7 @@ function Login() {
       <h2>🏦 Banking AI Login</h2>
 
       <select
+        value={role}
         onChange={(e) => setRole(e.target.value)}
         style={{ padding: "10px", margin: "20px" }}
       >
@@ -43,7 +47,8 @@ function Login() {
           background: "#0f172a",
           color: "white",
           border: "none",
-          borderRadius: "5px"
+          borderRadius: "5px",
+          cursor: "pointer"
         }}
       >
         Login

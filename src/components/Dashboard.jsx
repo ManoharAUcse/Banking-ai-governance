@@ -1,16 +1,27 @@
 import ComplianceCard from "./ComplianceCard";
+import RiskForm from "./RiskForm";
 
 function Dashboard() {
   return (
     <div
       style={{
         marginLeft: "240px",
-        padding: "30px",
-        background: "#f1f5f9",
+        padding: "40px",
+        background: "#f8fafc",
         minHeight: "100vh"
       }}
     >
+      <h1 style={{ marginBottom: "30px", fontWeight: "600" }}>
+        AI Governance Dashboard
+      </h1>
+
+      {/* Compliance Section */}
       <ComplianceCard />
+
+      {/* Risk Form Section */}
+      <div style={{ marginTop: "50px" }}>
+        <RiskForm />
+      </div>
     </div>
   );
 }
