@@ -19,7 +19,7 @@ function Login() {
 
   return (
     <div
-      style={{git 
+      style={{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
