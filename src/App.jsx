@@ -6,6 +6,8 @@ import LoanBias from "./components/LoanBias";
 import FraudMonitor from "./components/FraudMonitor";
 import Login from "./components/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PredictionHistory from "./components/PredictionHistory";
+
 
 function App() {
   return (
@@ -62,5 +64,19 @@ function App() {
     </BrowserRouter>
   );
 }
+<Route
+  path="/history"
+  element={
+    <ProtectedRoute allowedRoles={["admin", "auditor"]}>
+      <>
+        <Navbar />
+        <Sidebar />
+        <PredictionHistory />
+      </>
+    </ProtectedRoute>
+  }
+/>
+
+
 
 export default App;

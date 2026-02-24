@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json());
 
 /* =========================================
-   LOGIN API (Stores login in users table)
+   LOGIN API
 ========================================= */
 app.post("/api/login", (req, res) => {
   const { role } = req.body;
@@ -19,7 +19,7 @@ app.post("/api/login", (req, res) => {
 
   const sql = "INSERT INTO users (role) VALUES (?)";
 
-  db.query(sql, [role], (err, result) => {
+  db.query(sql, [role], (err) => {
     if (err) {
       console.error("Login insert error:", err);
       return res.status(500).json({ error: "Database error" });
@@ -29,19 +29,16 @@ app.post("/api/login", (req, res) => {
   });
 });
 
-
 /* =========================================
-   LOAN RISK PREDICTION API
+   LOAN RISK PREDICTION
 ========================================= */
 app.post("/api/loan/predict", (req, res) => {
   const { income, creditScore } = req.body;
 
-  // ✅ Proper validation
   if (income == null || creditScore == null) {
     return res.status(400).json({ message: "Income and Credit Score required" });
   }
 
-  // Convert to numbers safely
   const incomeNum = Number(income);
   const creditNum = Number(creditScore);
 
@@ -68,40 +65,99 @@ app.post("/api/loan/predict", (req, res) => {
   });
 });
 
-
 /* =========================================
-   FETCH ALL LOGIN RECORDS
+   ANALYTICS DASHBOARD API
 ========================================= */
-app.get("/api/users", (req, res) => {
-  db.query("SELECT * FROM users ORDER BY login_time DESC", (err, results) => {
+app.get("/api/analytics", (req, res) => {
+  const sql = `
+    SELECT 
+      COUNT(*) as total,
+      COALESCE(SUM(CASE WHEN risk='High' THEN 1 ELSE 0 END),0) as high,
+      COALESCE(SUM(CASE WHEN risk='Medium' THEN 1 ELSE 0 END),0) as medium,
+      COALESCE(SUM(CASE WHEN risk='Low' THEN 1 ELSE 0 END),0) as low
+    FROM risk_predictions
+  `;
+
+  db.query(sql, (err, result) => {
     if (err) {
-      console.error("Fetch users error:", err);
+      console.error("Analytics error:", err);
       return res.status(500).json({ error: "Database error" });
     }
 
-    res.json(results);
+    res.json(result[0]);
   });
 });
 
-
 /* =========================================
-   FETCH RISK PREDICTIONS HISTORY
+   FRAUD MONITOR API
 ========================================= */
-app.get("/api/risk-predictions", (req, res) => {
-  db.query(
-    "SELECT * FROM risk_predictions ORDER BY created_at DESC",
-    (err, results) => {
-      if (err) {
-        console.error("Fetch predictions error:", err);
-        return res.status(500).json({ error: "Database error" });
-      }
+app.get("/api/fraud", (req, res) => {
+  const sql = `
+    SELECT 
+      COUNT(*) as total,
+      COALESCE(SUM(CASE WHEN risk='High' THEN 1 ELSE 0 END),0) as high
+    FROM risk_predictions
+  `;
 
-      res.json(results);
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error("Fraud error:", err);
+      return res.status(500).json({ error: "Database error" });
     }
-  );
+
+    const total = result[0].total || 0;
+    const high = result[0].high || 0;
+
+    let fraudRiskLevel = "Low";
+
+    if (total > 0) {
+      const percent = (high / total) * 100;
+      if (percent > 40) fraudRiskLevel = "High";
+      else if (percent > 20) fraudRiskLevel = "Medium";
+    }
+
+    res.json({
+      totalPredictions: total,
+      highRiskCount: high,
+      fraudRiskLevel
+    });
+  });
 });
+app.get("/api/fraud", (req, res) => {
+  const sql = `
+    SELECT
+      COUNT(*) as total,
+      COALESCE(SUM(CASE WHEN risk='High' THEN 1 ELSE 0 END),0) as high,
+      COALESCE(SUM(CASE WHEN risk='Medium' THEN 1 ELSE 0 END),0) as medium,
+      COALESCE(SUM(CASE WHEN risk='Low' THEN 1 ELSE 0 END),0) as low
+    FROM risk_predictions
+  `;
 
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error("Fraud error:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
 
+    const data = result[0];
+
+    let fraudRiskLevel = "Low";
+
+    if (data.total > 0) {
+      const percent = (data.high / data.total) * 100;
+      if (percent > 40) fraudRiskLevel = "High";
+      else if (percent > 20) fraudRiskLevel = "Medium";
+    }
+
+    res.json({
+      total: Number(data.total),
+      high: Number(data.high),
+      medium: Number(data.medium),
+      low: Number(data.low),
+      fraudRiskLevel
+    });
+  });
+});
 /* =========================================
    SERVER START
 ========================================= */

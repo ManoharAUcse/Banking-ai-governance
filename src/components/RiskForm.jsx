@@ -4,96 +4,75 @@ import axios from "axios";
 function RiskForm() {
   const [income, setIncome] = useState("");
   const [creditScore, setCreditScore] = useState("");
+  const [loanAmount, setLoanAmount] = useState("");
+  const [employment, setEmployment] = useState("");
   const [risk, setRisk] = useState("");
+  const [score, setScore] = useState(null);
 
-  const predictRisk = () => {
-    if (!income || !creditScore) {
-      alert("Please enter all fields");
-      return;
-    }
-
+  const handleSubmit = () => {
     axios
       .post("http://localhost:5000/api/loan/predict", {
-        income: Number(income),
-        creditScore: Number(creditScore)
+        income,
+        creditScore,
+        loanAmount,
+        employment
       })
-      .then((res) => setRisk(res.data.risk))
+      .then((res) => {
+        console.log(res.data);
+        setRisk(res.data.risk);
+        setScore(res.data.score);
+      })
       .catch((err) => console.log(err));
   };
 
-  const cardStyle = {
-    background: "white",
-    padding: "30px",
-    borderRadius: "12px",
-    boxShadow: "0 8px 20px rgba(0,0,0,0.08)",
-    maxWidth: "400px"
-  };
-
-  const inputStyle = {
-    width: "100%",
-    padding: "10px",
-    borderRadius: "6px",
-    border: "1px solid #d1d5db",
-    marginBottom: "15px"
-  };
-
-  const buttonStyle = {
-    width: "100%",
-    padding: "10px",
-    background: "#2563eb",
-    color: "white",
-    border: "none",
-    borderRadius: "6px",
-    cursor: "pointer",
-    fontWeight: "600"
-  };
-
   return (
-    <div style={cardStyle}>
-      <h3 style={{ marginBottom: "20px" }}>
-        Loan Risk Prediction
-      </h3>
+    <div style={{ marginLeft: "240px", padding: "40px" }}>
+      <h2>AI Loan Risk Prediction</h2>
 
       <input
         type="number"
-        placeholder="Enter Income"
+        placeholder="Income"
         value={income}
         onChange={(e) => setIncome(e.target.value)}
-        style={inputStyle}
       />
+      <br /><br />
 
       <input
         type="number"
-        placeholder="Enter Credit Score"
+        placeholder="Credit Score"
         value={creditScore}
         onChange={(e) => setCreditScore(e.target.value)}
-        style={inputStyle}
       />
+      <br /><br />
 
-      <button
-        onClick={predictRisk}
-        style={buttonStyle}
-        onMouseOver={(e) => (e.target.style.background = "#1d4ed8")}
-        onMouseOut={(e) => (e.target.style.background = "#2563eb")}
+      <input
+        type="number"
+        placeholder="Loan Amount"
+        value={loanAmount}
+        onChange={(e) => setLoanAmount(e.target.value)}
+      />
+      <br /><br />
+
+      <select
+        value={employment}
+        onChange={(e) => setEmployment(e.target.value)}
       >
-        Predict Risk
-      </button>
+        <option value="">Select Employment</option>
+        <option value="Government">Government</option>
+        <option value="Private">Private</option>
+        <option value="Self-Employed">Self-Employed</option>
+      </select>
+      <br /><br />
 
-      {risk && (
-        <h3
-          style={{
-            marginTop: "20px",
-            color:
-              risk === "High"
-                ? "#ef4444"
-                : risk === "Medium"
-                ? "#f59e0b"
-                : "#22c55e"
-          }}
-        >
-          Risk Level: {risk}
-        </h3>
-      )}
+      <button onClick={handleSubmit}>Predict Risk</button>
+
+      {score !== null && (
+  <div style={{ marginTop: "20px" }}>
+    <h3>Risk Level: {risk}</h3>
+    <h4>AI Score: {score} / 100</h4>
+  </div>
+)}
+
     </div>
   );
 }

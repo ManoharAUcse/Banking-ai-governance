@@ -59,6 +59,15 @@ function Sidebar() {
       >
         Audit Logs
       </NavLink>
+
+      <NavLink
+        to="/history"
+        style={({ isActive }) =>
+          isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+        }
+      >
+        Prediction History
+      </NavLink>
     </div>
   );
 }
