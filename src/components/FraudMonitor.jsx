@@ -2,55 +2,73 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 function FraudMonitor() {
+
   const [data, setData] = useState(null);
   const [animatedHigh, setAnimatedHigh] = useState(0);
 
   useEffect(() => {
+
     axios
       .get("http://localhost:5000/api/fraud")
       .then((res) => {
-        setData(res.data);
-        animateCounter(Number(res.data.highRiskCount));
+
+        const apiData = res.data;
+
+        setData(apiData);
+
+        animateCounter(Number(apiData.high));
+
       })
       .catch((err) => console.log(err));
+
   }, []);
 
   const animateCounter = (target) => {
+
     let start = 0;
+
     const interval = setInterval(() => {
+
       start += 1;
       setAnimatedHigh(start);
-      if (start >= target) clearInterval(interval);
+
+      if (start >= target) {
+        clearInterval(interval);
+      }
+
     }, 40);
+
   };
 
   if (!data)
     return <div style={loadingStyle}>Loading Fraud Intelligence...</div>;
 
-  const total = Number(data.totalPredictions) || 0;
-  const high = Number(data.highRiskCount) || 0;
+  const total = Number(data.total) || 0;
+  const high = Number(data.high) || 0;
+
   const safe = total - high;
 
   const percent = total ? ((high / total) * 100).toFixed(1) : 0;
 
   return (
     <div style={containerStyle}>
+
       <h1 style={titleStyle}>AI Fraud Intelligence Center</h1>
 
-      {/* STATUS BADGE */}
-      <div style={{
-        ...badgeStyle,
-        background:
-          data.fraudRiskLevel === "High"
-            ? "#ef4444"
-            : data.fraudRiskLevel === "Medium"
-            ? "#f59e0b"
-            : "#22c55e"
-      }}>
+      <div
+        style={{
+          ...badgeStyle,
+          background:
+            data.fraudRiskLevel === "High"
+              ? "#ef4444"
+              : data.fraudRiskLevel === "Medium"
+              ? "#f59e0b"
+              : "#22c55e"
+        }}
+      >
         {data.fraudRiskLevel} RISK
       </div>
 
-      {/* STAT CARDS */}
       <div style={cardContainer}>
         <GlassCard title="Total Predictions" value={total} />
         <GlassCard title="High Risk Cases" value={animatedHigh} color="#ef4444" />
@@ -58,9 +76,24 @@ function FraudMonitor() {
         <GlassCard title="Fraud %" value={`${percent}%`} color="#f59e0b" />
       </div>
 
-      {/* PROGRESS BAR */}
+      {/* 🚨 Fraud Alert Banner */}
+      {high > 5 && (
+        <div style={{
+          background:"#ef4444",
+          padding:"12px",
+          marginTop:"20px",
+          borderRadius:"10px",
+          fontWeight:"bold",
+          textAlign:"center",
+          boxShadow:"0 5px 15px rgba(0,0,0,0.4)"
+        }}>
+          ⚠ Fraud Alert: High risk loan activity detected
+        </div>
+      )}
+
       <div style={progressWrapper}>
         <div style={progressLabel}>Fraud Risk Distribution</div>
+
         <div style={progressBarBg}>
           <div
             style={{
@@ -71,9 +104,9 @@ function FraudMonitor() {
         </div>
       </div>
 
-      {/* CIRCULAR PROGRESS */}
       <div style={{ marginTop: "50px", textAlign: "center" }}>
         <svg width="200" height="200">
+
           <circle
             cx="100"
             cy="100"
@@ -82,6 +115,7 @@ function FraudMonitor() {
             strokeWidth="15"
             fill="none"
           />
+
           <circle
             cx="100"
             cy="100"
@@ -94,6 +128,7 @@ function FraudMonitor() {
             strokeLinecap="round"
             style={{ transition: "1s ease" }}
           />
+
           <text
             x="50%"
             y="50%"
@@ -104,35 +139,40 @@ function FraudMonitor() {
           >
             {percent}%
           </text>
+
         </svg>
       </div>
+
     </div>
   );
 }
 
-/* ---------- Glass Card Component ---------- */
+/* ---------- Glass Card ---------- */
 
 function GlassCard({ title, value, color }) {
+
   return (
-    <div style={{
-      ...glassCardStyle,
-      border: `1px solid ${color || "#334155"}`
-    }}>
+    <div
+      style={{
+        ...glassCardStyle,
+        border: `1px solid ${color || "#334155"}`
+      }}
+    >
       <h4>{title}</h4>
       <h2 style={{ color: color || "white" }}>{value}</h2>
     </div>
   );
+
 }
 
-/* ---------- STYLES ---------- */
+/* ---------- Styles ---------- */
 
 const containerStyle = {
   marginLeft: "240px",
   padding: "40px",
   minHeight: "100vh",
   background: "linear-gradient(135deg,#0f172a,#1e293b,#0f172a)",
-  color: "white",
-  animation: "fadeIn 0.8s ease"
+  color: "white"
 };
 
 const titleStyle = {
@@ -161,7 +201,6 @@ const glassCardStyle = {
   padding: "25px",
   borderRadius: "15px",
   minWidth: "200px",
-  transition: "0.3s",
   boxShadow: "0 10px 30px rgba(0,0,0,0.3)"
 };
 

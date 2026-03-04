@@ -1,26 +1,51 @@
+import { useEffect, useState } from "react";
+
 function LoanBias() {
+
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+
+    fetch("http://localhost:5000/api/bias")
+      .then(res => res.json())
+      .then(result => setData(result));
+
+  }, []);
+
+  if (!data) {
+    return <div style={containerStyle}>Loading...</div>;
+  }
+
   return (
     <div style={containerStyle}>
-      <h1 style={{ marginBottom: "30px" }}>Loan Bias Detection</h1>
+
+      <h1 style={{ marginBottom: "30px" }}>
+        Loan Bias Detection
+      </h1>
 
       <div style={glassCard}>
+
         <h3 style={{ marginBottom: "20px" }}>
           Loan Approval Bias Analysis
         </h3>
 
-        <BiasRow label="Gender Bias" value="8%" />
-        <BiasRow label="Region Bias" value="5%" />
-        <BiasRow label="Income Bias" value="6%" />
+        <BiasRow label="Model Accuracy" value={data.accuracy} />
+        <BiasRow label="Gender Bias" value={data.genderBias} />
+        <BiasRow label="Region Bias" value={data.regionBias} />
+        <BiasRow label="Income Bias" value={data.incomeBias} />
+        <BiasRow label="Fraud Alerts" value={data.fraudAlerts} />
 
         <div style={statusStyle}>
-          ✔ Status: Fair Model
+          ✔ Compliance Status: {data.complianceStatus}
         </div>
+
       </div>
     </div>
   );
 }
 
 function BiasRow({ label, value }) {
+
   return (
     <div style={rowStyle}>
       <span>{label}</span>
@@ -29,25 +54,22 @@ function BiasRow({ label, value }) {
       </span>
     </div>
   );
-}
 
-/* ---------- Styles ---------- */
+}
 
 const containerStyle = {
   marginLeft: "240px",
   padding: "40px",
   minHeight: "100vh",
-  background: "linear-gradient(135deg, #0f172a, #1e293b)",
+  background: "linear-gradient(135deg,#0f172a,#1e293b)",
   color: "white"
 };
 
 const glassCard = {
-  background: "rgba(30, 41, 59, 0.6)",
+  background: "rgba(30,41,59,0.6)",
   backdropFilter: "blur(12px)",
   padding: "30px",
-  borderRadius: "16px",
-  boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
-  maxWidth: "500px"
+  borderRadius: "16px"
 };
 
 const rowStyle = {
@@ -59,8 +81,8 @@ const rowStyle = {
 
 const statusStyle = {
   marginTop: "20px",
-  fontWeight: "bold",
-  color: "#22c55e"
+  color: "#22c55e",
+  fontWeight: "bold"
 };
 
 export default LoanBias;
