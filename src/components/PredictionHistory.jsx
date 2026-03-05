@@ -1,57 +1,62 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-function PredictionHistory(){
+function PredictionHistory() {
 
-  const [rows,setRows] = useState([]);
+  const [data, setData] = useState([]);
 
-  useEffect(()=>{
+  useEffect(() => {
 
-    axios.get("http://localhost:5000/api/predictions")
-      .then(res=>setRows(res.data));
+    axios
+      .get("http://localhost:5000/api/predictions")
+      .then(res => setData(res.data))
+      .catch(err => console.log(err));
 
-  },[]);
+  }, []);
 
-  return(
+  return (
 
-  <div style={{marginLeft:"240px",padding:"40px",color:"white"}}>
+<div style={{ marginLeft:"240px", padding:"40px", color:"white" }}>
 
-  <h1>Loan Decision History</h1>
+<h2>Loan Prediction Audit Trail</h2>
 
-  <table style={{width:"100%",marginTop:"20px"}}>
+<table border="1" cellPadding="10">
 
-  <thead>
+<thead>
 
-  <tr>
-  <th>ID</th>
-  <th>Income</th>
-  <th>Credit Score</th>
-  <th>Risk</th>
-  <th>Date</th>
-  </tr>
+<tr>
+<th>Income</th>
+<th>Credit Score</th>
+<th>Loan Amount</th>
+<th>Risk</th>
+<th>Decision</th>
+<th>Date</th>
+</tr>
 
-  </thead>
+</thead>
 
-  <tbody>
+<tbody>
 
-  {rows.map(r=>(
-  <tr key={r.id}>
-  <td>{r.id}</td>
-  <td>{r.income}</td>
-  <td>{r.credit_score}</td>
-  <td>{r.risk}</td>
-  <td>{r.created_at}</td>
-  </tr>
-  ))}
+{data.map((item,index)=>(
+<tr key={index}>
 
-  </tbody>
+<td>{item.income}</td>
+<td>{item.credit_score}</td>
+<td>{item.loan_amount}</td>
+<td>{item.risk}</td>
+<td>{item.decision}</td>
+<td>{item.created_at}</td>
 
-  </table>
+</tr>
+))}
 
-  </div>
+</tbody>
+
+</table>
+
+</div>
 
   );
-
 }
 
 export default PredictionHistory;

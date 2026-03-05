@@ -21,13 +21,16 @@ function RiskForm() {
   const [takeHome, setTakeHome] = useState(null);
 
   const [eligibleLoan, setEligibleLoan] = useState(null);
+  const [recommendedLoan, setRecommendedLoan] = useState(null);
+
+  const [probability, setProbability] = useState(null);
 
   /* ---------------- AI RISK PREDICTION ---------------- */
 
   const handleSubmit = () => {
 
-    if (!income || !creditScore) {
-      alert("Please fill required fields");
+    if (!income || !creditScore || !loanAmount) {
+      alert("Please fill Salary, Credit Score and Loan Amount");
       return;
     }
 
@@ -41,13 +44,13 @@ function RiskForm() {
       .then((res) => {
 
         setRisk(res.data.risk);
-        setScore(res.data.riskScore);
         setDecision(res.data.decision);
+        setScore(res.data.modelAccuracy);
         setExplanation(res.data.explanation || []);
+        setProbability(res.data.probability);
 
       })
       .catch((err) => console.log(err));
-
   };
 
   /* ---------------- EMI CALCULATION ---------------- */
@@ -89,7 +92,6 @@ function RiskForm() {
       return;
     }
 
-    // Bank allows about 40% salary as EMI
     const maxEMI = salary * 0.4;
 
     const loan =
@@ -99,13 +101,27 @@ function RiskForm() {
     setEligibleLoan(loan.toFixed(0));
   };
 
+  /* ---------------- AI LOAN RECOMMENDATION ---------------- */
+
+  const recommendLoan = () => {
+
+    const salary = Number(income);
+
+    if (!salary) {
+      alert("Enter salary first");
+      return;
+    }
+
+    const recommended = salary * 60;
+
+    setRecommendedLoan(recommended);
+  };
+
   return (
 
     <div style={{ marginLeft: "240px", padding: "40px", color: "white" }}>
 
       <h2>AI Loan Risk Prediction</h2>
-
-      {/* Salary */}
 
       <input
         type="number"
@@ -116,8 +132,6 @@ function RiskForm() {
 
       <br /><br />
 
-      {/* Credit Score */}
-
       <input
         type="number"
         placeholder="Credit Score"
@@ -127,8 +141,6 @@ function RiskForm() {
 
       <br /><br />
 
-      {/* Loan Amount */}
-
       <input
         type="number"
         placeholder="Loan Amount"
@@ -137,8 +149,6 @@ function RiskForm() {
       />
 
       <br /><br />
-
-      {/* Employment */}
 
       <select
         value={employment}
@@ -152,8 +162,6 @@ function RiskForm() {
 
       <br /><br />
 
-      {/* Interest Rate */}
-
       <input
         type="number"
         placeholder="Interest Rate (%)"
@@ -163,8 +171,6 @@ function RiskForm() {
 
       <br /><br />
 
-      {/* Loan Years */}
-
       <input
         type="number"
         placeholder="Loan Duration (Years)"
@@ -173,8 +179,6 @@ function RiskForm() {
       />
 
       <br /><br />
-
-      {/* Buttons */}
 
       <button
         onClick={handleSubmit}
@@ -214,10 +218,25 @@ function RiskForm() {
           border: "none",
           borderRadius: "8px",
           color: "white",
-          fontWeight: "bold"
+          fontWeight: "bold",
+          marginRight: "10px"
         }}
       >
         Check Loan Eligibility
+      </button>
+
+      <button
+        onClick={recommendLoan}
+        style={{
+          padding: "10px 20px",
+          background: "#8b5cf6",
+          border: "none",
+          borderRadius: "8px",
+          color: "white",
+          fontWeight: "bold"
+        }}
+      >
+        AI Loan Recommendation
       </button>
 
       {/* ---------------- AI RESULT ---------------- */}
@@ -244,7 +263,11 @@ function RiskForm() {
             Risk Level: {risk}
           </h3>
 
-          <h4>AI Score: {score} / 100</h4>
+          <h4>ML Model Accuracy: {score}%</h4>
+
+          {probability && (
+            <p>Approval Probability: {probability}%</p>
+          )}
 
           <p>Prediction Time: {new Date().toLocaleString()}</p>
 
@@ -308,8 +331,30 @@ function RiskForm() {
 
       )}
 
-    </div>
+      {/* ---------------- AI LOAN RECOMMENDATION ---------------- */}
 
+      {recommendedLoan && (
+
+        <div style={{
+          marginTop: "30px",
+          background: "#312e81",
+          padding: "20px",
+          borderRadius: "10px"
+        }}>
+
+          <h3>AI Loan Recommendation</h3>
+
+          <p>Recommended Loan Amount: ₹{recommendedLoan}</p>
+
+          <p>Suggested Tenure: 5 – 10 Years</p>
+
+          <p>Reason: Based on salary affordability analysis</p>
+
+        </div>
+
+      )}
+
+    </div>
   );
 }
 

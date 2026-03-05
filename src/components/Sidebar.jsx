@@ -51,23 +51,6 @@ function Sidebar() {
         Fraud Monitor
       </NavLink>
 
-      <NavLink
-        to="/audit-logs"
-        style={({ isActive }) =>
-          isActive ? { ...linkStyle, ...activeStyle } : linkStyle
-        }
-      >
-        Audit Logs
-      </NavLink>
-
-      <NavLink
-        to="/history"
-        style={({ isActive }) =>
-          isActive ? { ...linkStyle, ...activeStyle } : linkStyle
-        }
-      >
-        Prediction History
-      </NavLink>
     </div>
   );
 }
