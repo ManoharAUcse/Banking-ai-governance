@@ -6,6 +6,8 @@ import LoanBias from "./components/LoanBias";
 import FraudMonitor from "./components/FraudMonitor";
 import Login from "./components/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
+import LoanRegulations from "./components/LoanRegulations";
+import GovernmentSchemes from "./components/GovernmentSchemes";
 
 function App() {
   return (
@@ -56,12 +58,39 @@ function App() {
             </ProtectedRoute>
           }
         />
+        
+<Route
+  path="/loan-regulations"
+  element={
+    <ProtectedRoute allowedRoles={["admin"]}>
+      <>
+        <Navbar />
+        <Sidebar />
+        <LoanRegulations />
+      </>
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/government-schemes"
+  element={
+    <ProtectedRoute allowedRoles={["admin"]}>
+      <>
+        <Navbar />
+        <Sidebar />
+        <GovernmentSchemes />
+      </>
+    </ProtectedRoute>
+  }
+/>
 
         {/* Unknown Route */}
         <Route path="*" element={<Navigate to="/" />} />
 
       </Routes>
     </BrowserRouter>
+    
   );
 }
 

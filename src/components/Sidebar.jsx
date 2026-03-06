@@ -51,6 +51,27 @@ function Sidebar() {
         Fraud Monitor
       </NavLink>
 
+      {/* Loan Regulations Page */}
+
+      <NavLink
+        to="/loan-regulations"
+        style={({ isActive }) =>
+          isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+        }
+      >
+        Loan Regulations
+      </NavLink>
+     
+     {/*Schemes */}
+      <NavLink
+  to="/government-schemes"
+  style={({ isActive }) =>
+    isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+  }
+>
+  Government Schemes
+</NavLink>
+
     </div>
   );
 }

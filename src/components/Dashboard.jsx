@@ -8,6 +8,13 @@ function Dashboard() {
   const [score, setScore] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const [analytics, setAnalytics] = useState({
+    total: 0,
+    high: 0,
+    medium: 0,
+    low: 0
+  });
+
   useEffect(() => {
 
     fetch("http://localhost:5000/api/governance-score")
@@ -20,6 +27,15 @@ function Dashboard() {
         console.log(err);
         setLoading(false);
       });
+
+    /* -------- Fetch Analytics -------- */
+
+    fetch("http://localhost:5000/api/analytics")
+      .then(res => res.json())
+      .then(data => {
+        setAnalytics(data);
+      })
+      .catch(err => console.log(err));
 
   }, []);
 
@@ -77,7 +93,7 @@ function Dashboard() {
           minWidth:"200px"
         }}>
           <h4>Total Predictions</h4>
-          <h2>128</h2>
+          <h2>{analytics.total}</h2>
         </div>
 
         <div style={{
@@ -87,7 +103,7 @@ function Dashboard() {
           minWidth:"200px"
         }}>
           <h4>High Risk Loans</h4>
-          <h2 style={{color:"#ef4444"}}>12</h2>
+          <h2 style={{color:"#ef4444"}}>{analytics.high}</h2>
         </div>
 
         <div style={{
