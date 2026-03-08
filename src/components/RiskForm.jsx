@@ -24,6 +24,7 @@ function RiskForm() {
   const [recommendedLoan, setRecommendedLoan] = useState(null);
 
   const [probability, setProbability] = useState(null);
+  const [notification,setNotification] = useState("")
 
   /* ---------------- AI RISK PREDICTION ---------------- */
 
@@ -112,10 +113,34 @@ function RiskForm() {
       return;
     }
 
-    const recommended = salary * 60;
+     const recommended = salary * 60;
 
     setRecommendedLoan(recommended);
-  };
+  }
+
+const submitAppeal = async () => {
+
+const res = await fetch("http://localhost:5001/appeal",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+loan_id: loanId,
+reason: reason
+})
+})
+
+const data = await res.json()
+
+setNotification("✅ Appeal submitted successfully!")
+
+setTimeout(()=>{
+setNotification("")
+},3000)
+
+}
+;
 
   return (
 
@@ -189,7 +214,8 @@ function RiskForm() {
           borderRadius: "8px",
           color: "white",
           fontWeight: "bold",
-          marginRight: "10px"
+          marginRight: "5px",
+          cursor:"pointer"
         }}
       >
         Predict Risk
@@ -204,7 +230,8 @@ function RiskForm() {
           borderRadius: "8px",
           color: "white",
           fontWeight: "bold",
-          marginRight: "10px"
+          marginRight: "5px",
+          cursor:"pointer"
         }}
       >
         Calculate EMI
@@ -219,7 +246,8 @@ function RiskForm() {
           borderRadius: "8px",
           color: "white",
           fontWeight: "bold",
-          marginRight: "10px"
+          marginRight: "5px",
+          cursor:"pointer"
         }}
       >
         Check Loan Eligibility
@@ -233,10 +261,26 @@ function RiskForm() {
           border: "none",
           borderRadius: "8px",
           color: "white",
-          fontWeight: "bold"
+          fontWeight: "bold",
+          marginRight: "5px",
+          cursor:"pointer"
         }}
       >
         AI Loan Recommendation
+      </button>
+
+      <button
+       onClick={submitAppeal}
+       style={{
+          padding: "10px 20px",
+          background: "#85f65c",
+          border: "none",
+          borderRadius: "8px",
+          color: "white",
+          fontWeight: "bold",
+          cursor:"pointer"
+        }}>
+      Appeal Decision
       </button>
 
       {/* ---------------- AI RESULT ---------------- */}

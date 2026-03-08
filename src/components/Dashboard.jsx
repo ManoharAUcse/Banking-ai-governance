@@ -2,6 +2,7 @@ import ComplianceCard from "./ComplianceCard";
 import RiskForm from "./RiskForm";
 import { useEffect, useState } from "react";
 import RiskAnalytics from "./RiskAnalytics";
+import Chatbot from "./Chatbot";
 
 function Dashboard() {
 
@@ -124,6 +125,8 @@ function Dashboard() {
         <ComplianceCard />
       </div>
 
+
+
       {/* Loan Risk System */}
 
       <div style={{ marginTop: "50px" }}>
@@ -139,6 +142,8 @@ function Dashboard() {
           <RiskAnalytics />
         </div>
       </div>
+
+<Chatbot />
 
     </div>
   );

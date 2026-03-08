@@ -143,6 +143,7 @@ function FraudMonitor() {
         </svg>
       </div>
 
+
     </div>
   );
 }
