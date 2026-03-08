@@ -1,35 +1,77 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function Sidebar() {
   const linkStyle = {
     display: "block",
-    margin: "15px 0",
+    padding: "12px 20px",
     color: "white",
     textDecoration: "none"
+  };
+
+  const activeStyle = {
+    background: "#1e293b"
   };
 
   return (
     <div
       style={{
         width: "220px",
-        background: "#0f172a",
-        color: "white",
         height: "100vh",
-        padding: "20px",
-        position: "fixed"
+        background: "#0f172a",
+        position: "fixed",
+        left: 0,
+        top: 0,
+        paddingTop: "60px"
       }}
     >
-      <h3 style={{ marginBottom: "30px" }}>🏦 Bank AI</h3>
-
-      <Link to="/dashboard" style={linkStyle}>
+      <NavLink
+        to="/dashboard"
+        style={({ isActive }) =>
+          isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+        }
+      >
         Dashboard
-      </Link>
-      <Link to="/loan-bias" style={linkStyle}>
+      </NavLink>
+
+      <NavLink
+        to="/loan-bias"
+        style={({ isActive }) =>
+          isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+        }
+      >
         Loan Bias
-      </Link>
-      <Link to="/fraud" style={linkStyle}>
+      </NavLink>
+
+      <NavLink
+        to="/fraud"
+        style={({ isActive }) =>
+          isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+        }
+      >
         Fraud Monitor
-      </Link>
+      </NavLink>
+
+      {/* Loan Regulations Page */}
+
+      <NavLink
+        to="/loan-regulations"
+        style={({ isActive }) =>
+          isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+        }
+      >
+        Loan Regulations
+      </NavLink>
+     
+     {/*Schemes */}
+      <NavLink
+  to="/government-schemes"
+  style={({ isActive }) =>
+    isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+  }
+>
+  Government Schemes
+</NavLink>
+
     </div>
   );
 }

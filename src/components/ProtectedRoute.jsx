@@ -1,14 +1,17 @@
 import { Navigate } from "react-router-dom";
 
 function ProtectedRoute({ children, allowedRoles }) {
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
   const role = localStorage.getItem("role");
 
-  if (!role) {
-    return <Navigate to="/" />;
+  // Not logged in
+  if (!isLoggedIn) {
+    return <Navigate to="/" replace />;
   }
 
-  if (allowedRoles && !allowedRoles.includes(role)) {
-    return <Navigate to="/" />;
+  // Role not allowed
+  if (!allowedRoles || !allowedRoles.includes(role)) {
+    return <Navigate to="/" replace />;
   }
 
   return children;

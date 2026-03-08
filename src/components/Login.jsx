@@ -1,18 +1,35 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Login() {
   const [role, setRole] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-  if (role) {
-    localStorage.setItem("role", role);
+  const handleLogin = async () => {
+    if (!role) {
+      return alert("Please select a role");
+    }
 
-    if (role === "admin") navigate("/dashboard");
-    if (role === "auditor") navigate("/loan-bias");
-  }
-};
+    try {
+      // 🔥 Call backend login API
+      await axios.post("http://localhost:5000/api/login", {
+        role: role
+      });
+
+      // Store in localStorage for route protection
+      localStorage.setItem("role", role);
+      localStorage.setItem("isLoggedIn", "true");
+
+      // Navigate based on role
+      if (role === "admin") navigate("/dashboard");
+      if (role === "auditor") navigate("/loan-bias");
+
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Login failed");
+    }
+  };
 
   return (
     <div
@@ -28,6 +45,7 @@ function Login() {
       <h2>🏦 Banking AI Login</h2>
 
       <select
+        value={role}
         onChange={(e) => setRole(e.target.value)}
         style={{ padding: "10px", margin: "20px" }}
       >
@@ -43,7 +61,8 @@ function Login() {
           background: "#0f172a",
           color: "white",
           border: "none",
-          borderRadius: "5px"
+          borderRadius: "5px",
+          cursor: "pointer"
         }}
       >
         Login
