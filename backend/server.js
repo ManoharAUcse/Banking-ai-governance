@@ -75,16 +75,18 @@ app.post("/api/loan/predict", async (req, res) => {
 
       console.log("Prediction saved successfully");
 
-     res.json({
-       decision,
-       risk,
-       modelAccuracy: mlResponse.data.model_accuracy,
-       probability: mlResponse.data.approval_probability,
-       explanation: [
-        "Machine Learning model prediction",
-        "Income and credit score analysis"
-   ]
-});
+      res.json({
+        decision,
+        risk,
+        modelAccuracy: mlResponse.data.model_accuracy,
+        probability: mlResponse.data.probability,
+        explanation: [
+          "Machine Learning model prediction",
+          "Income and credit score analysis"
+        ],
+        reasons: mlResponse.data.reasons || [],
+        suggestions: mlResponse.data.suggestions || []
+      });
 
     });
 

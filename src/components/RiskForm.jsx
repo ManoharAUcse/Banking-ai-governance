@@ -16,6 +16,9 @@ function RiskForm() {
   const [decision, setDecision] = useState("");
   const [explanation, setExplanation] = useState([]);
 
+  const [reasons, setReasons] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
+
   const [emi, setEmi] = useState(null);
   const [totalInterest, setTotalInterest] = useState(null);
   const [takeHome, setTakeHome] = useState(null);
@@ -24,7 +27,9 @@ function RiskForm() {
   const [recommendedLoan, setRecommendedLoan] = useState(null);
 
   const [probability, setProbability] = useState(null);
-  const [notification,setNotification] = useState("")
+  const [notification,setNotification] = useState("");
+
+  const [loanId,setLoanId] = useState(null);
 
   /* ---------------- AI RISK PREDICTION ---------------- */
 
@@ -36,7 +41,7 @@ function RiskForm() {
     }
 
     axios
-      .post("http://localhost:5000/api/loan/predict", {
+      .post("http://localhost:5001/predict", {
         income,
         creditScore,
         loanAmount,
@@ -44,11 +49,21 @@ function RiskForm() {
       })
       .then((res) => {
 
+        setLoanId(res.data.loan_id);
         setRisk(res.data.risk);
         setDecision(res.data.decision);
-        setScore(res.data.modelAccuracy);
-        setExplanation(res.data.explanation || []);
+        setScore(res.data.model_accuracy);
         setProbability(res.data.probability);
+
+        setReasons(res.data.reasons || []);
+        setSuggestions(res.data.suggestions || []);
+
+        const combinedExplanation = [
+          ...(res.data.reasons || []),
+          ...(res.data.suggestions || [])
+        ];
+
+        setExplanation(combinedExplanation);
 
       })
       .catch((err) => console.log(err));
@@ -73,11 +88,11 @@ function RiskForm() {
 
     const totalPayment = emiValue * N;
     const interest = totalPayment - P;
-    const salaryLeft = income - emiValue;
+    const salaryLeft = Number(income) - emiValue;
 
-    setEmi(emiValue.toFixed(0));
-    setTotalInterest(interest.toFixed(0));
-    setTakeHome(salaryLeft.toFixed(0));
+    setEmi(Math.round(emiValue));
+    setTotalInterest(Math.round(interest));
+    setTakeHome(Math.round(salaryLeft));
   };
 
   /* ---------------- LOAN ELIGIBILITY ---------------- */
@@ -99,7 +114,7 @@ function RiskForm() {
       (maxEMI * (Math.pow(1 + rate, months) - 1)) /
       (rate * Math.pow(1 + rate, months));
 
-    setEligibleLoan(loan.toFixed(0));
+    setEligibleLoan(Math.round(loan));
   };
 
   /* ---------------- AI LOAN RECOMMENDATION ---------------- */
@@ -113,34 +128,40 @@ function RiskForm() {
       return;
     }
 
-     const recommended = salary * 60;
+    const recommended = salary * 60;
 
-    setRecommendedLoan(recommended);
-  }
+    setRecommendedLoan(Math.round(recommended));
+  };
 
-const submitAppeal = async () => {
+  /* ---------------- APPEAL ---------------- */
 
-const res = await fetch("http://localhost:5001/appeal",{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-loan_id: loanId,
-reason: reason
-})
-})
+  const submitAppeal = async () => {
 
-const data = await res.json()
+    if(!loanId){
+      alert("Predict loan first before appealing");
+      return;
+    }
 
-setNotification("✅ Appeal submitted successfully!")
+    const res = await fetch("http://localhost:5001/appeal",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        loan_id: loanId,
+        reason: "User requested reconsideration"
+      })
+    });
 
-setTimeout(()=>{
-setNotification("")
-},3000)
+    await res.json();
 
-}
-;
+    setNotification("✅ Appeal submitted successfully!");
+
+    setTimeout(()=>{
+      setNotification("")
+    },3000);
+
+  };
 
   return (
 
@@ -283,30 +304,19 @@ setNotification("")
       Appeal Decision
       </button>
 
+      {notification && <p>{notification}</p>}
+
+      {/*styles of buttons*/}
+      
+
       {/* ---------------- AI RESULT ---------------- */}
 
       {score !== null && (
 
-        <div style={{
-          marginTop: "30px",
-          background: "#1e293b",
-          padding: "20px",
-          borderRadius: "10px"
-        }}>
+        <div style={{marginTop:"30px"}}>
 
           <h3>Decision: {decision}</h3>
-
-          <h3 style={{
-            color:
-              risk === "High"
-                ? "#ef4444"
-                : risk === "Medium"
-                ? "#f59e0b"
-                : "#22c55e"
-          }}>
-            Risk Level: {risk}
-          </h3>
-
+          <h3>Risk Level: {risk}</h3>
           <h4>ML Model Accuracy: {score}%</h4>
 
           {probability && (
@@ -321,78 +331,70 @@ setNotification("")
             <p key={index}>✔ {item}</p>
           ))}
 
+          {reasons.length > 0 && (
+            <>
+              <h4>Decision Reasons</h4>
+              {reasons.map((r, index) => (
+                <p key={index}>⚠ {r}</p>
+              ))}
+            </>
+          )}
+
+          {suggestions.length > 0 && (
+            <>
+              <h4>Eligibility Improvement Suggestions</h4>
+              {suggestions.map((s, index) => (
+                <p key={index}>💡 {s}</p>
+              ))}
+            </>
+          )}
+
         </div>
 
       )}
 
-      {/* ---------------- EMI RESULT ---------------- */}
+      {/* EMI RESULT */}
 
       {emi && (
 
-        <div style={{
-          marginTop: "30px",
-          background: "#111827",
-          padding: "20px",
-          borderRadius: "10px"
-        }}>
+        <div style={{marginTop:"30px"}}>
 
           <h3>Loan EMI Analysis</h3>
 
           <p>Monthly EMI: ₹{emi}</p>
-
           <p>Total Interest Payable: ₹{totalInterest}</p>
-
           <p>Take Home Salary After EMI: ₹{takeHome}</p>
-
-          <p>Loan Duration: {years} Years</p>
 
         </div>
 
       )}
 
-      {/* ---------------- LOAN ELIGIBILITY ---------------- */}
+      {/* ELIGIBILITY */}
 
       {eligibleLoan && (
 
-        <div style={{
-          marginTop: "30px",
-          background: "#1f2937",
-          padding: "20px",
-          borderRadius: "10px"
-        }}>
+        <div style={{marginTop:"30px"}}>
 
           <h3>Loan Eligibility Analysis</h3>
 
           <p>Monthly Salary: ₹{income}</p>
-
-          <p>Maximum EMI Allowed (40% rule): ₹{(income * 0.4).toFixed(0)}</p>
-
+          <p>Maximum EMI Allowed: ₹{(income * 0.4).toFixed(0)}</p>
           <p>Maximum Loan Bank Can Approve: ₹{eligibleLoan}</p>
-
-          <p>Loan Duration: {years} Years</p>
 
         </div>
 
       )}
 
-      {/* ---------------- AI LOAN RECOMMENDATION ---------------- */}
+      {/* RECOMMENDATION */}
 
       {recommendedLoan && (
 
-        <div style={{
-          marginTop: "30px",
-          background: "#312e81",
-          padding: "20px",
-          borderRadius: "10px"
-        }}>
+        <div style={{marginTop:"30px"}}>
 
           <h3>AI Loan Recommendation</h3>
 
           <p>Recommended Loan Amount: ₹{recommendedLoan}</p>
-
           <p>Suggested Tenure: 5 – 10 Years</p>
-
-          <p>Reason: Based on salary affordability analysis</p>
 
         </div>
 
