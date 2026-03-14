@@ -29,9 +29,19 @@ function RiskForm() {
   const [probability, setProbability] = useState(null);
   const [notification,setNotification] = useState("");
 
+  const [policyFile, setPolicyFile] = useState(null);
+  const [policyResult, setPolicyResult] = useState(null);
+
+  const [language, setLanguage] = useState("en");
+  
+
+
   const [loanId,setLoanId] = useState(null);
 
+
   /* ---------------- AI RISK PREDICTION ---------------- */
+
+  
 
   const handleSubmit = () => {
 
@@ -162,6 +172,40 @@ function RiskForm() {
     },3000);
 
   };
+
+  /* ---------------- POLICY ANALYZER ---------------- */
+const analyzePolicy = async (e) => {
+
+  if (e) e.preventDefault();
+
+  if (!policyFile) {
+    setPolicyResult({ error: "Please upload a file first." });
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", policyFile);
+
+  try {
+
+    const res = await axios.post(
+      "http://localhost:5001/analyze",
+      formData
+    );
+
+    // save backend response
+    setPolicyResult(res.data.analysis);
+
+  } catch (error) {
+
+    console.log(error);
+
+    setPolicyResult({
+      error: "Policy analysis failed. Please try again."
+    });
+  }
+};
+
 
   return (
 
@@ -399,6 +443,82 @@ function RiskForm() {
         </div>
 
       )}
+
+      {/* ---------------- POLICY ANALYZER ---------------- */}
+
+<div style={{
+  marginTop: "30px",
+  background: "#0f172a",
+  padding: "20px",
+  borderRadius: "10px"
+}}>
+
+  <h3>Insurance Policy Analyzer</h3>
+
+  <input
+    type="file"
+    onChange={(e) => setPolicyFile(e.target.files[0])}
+  />
+
+  <br /><br />
+
+<button
+  type="button"
+  onClick={analyzePolicy}
+  style={{
+    padding: "10px 20px",
+    background: "#6366f1",
+    border: "none",
+    borderRadius: "8px",
+    color: "white",
+    fontWeight: "bold",
+    cursor: "pointer"
+  }}
+>
+  Analyze Policy
+</button>
+
+{/* -------- ERROR MESSAGE -------- */}
+{policyResult && policyResult.error && (
+  <div style={{ marginTop: "20px", color: "red" }}>
+    <p><b>{policyResult.error}</b></p>
+    <p><b>Detected Document Type:</b> {policyResult.doc_type}</p>
+  </div>
+)}
+
+{/* -------- VALID LOAN RESULT -------- */}
+{policyResult && !policyResult.error && (
+  <div style={{ marginTop: "20px" }}>
+
+    <p><b>Document Type:</b> {policyResult.doc_type}</p>
+
+    <p><b>Safety Score:</b> {policyResult["Safety Score"]}</p>
+
+    <p><b>Red Flags:</b></p>
+    <ul>
+      {policyResult["Red Flags"].map((item, i) => (
+        <li key={i}>{item}</li>
+      ))}
+    </ul>
+
+    <p><b>Benefits:</b></p>
+    <ul>
+      {policyResult["Benefits"].map((item, i) => (
+        <li key={i}>{item}</li>
+      ))}
+    </ul>
+
+    <p><b>Coverage Gaps:</b></p>
+    <ul>
+      {policyResult["Coverage Gaps"].map((item, i) => (
+        <li key={i}>{item}</li>
+      ))}
+    </ul>
+
+  </div>
+)}
+
+</div>
 
     </div>
   );

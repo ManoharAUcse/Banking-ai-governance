@@ -1,13 +1,16 @@
 import { useNavigate } from "react-router-dom";
+import { translations } from "../translations";
 
-function Navbar() {
+function Navbar({ language }) {
+
+  const t = translations[language];
   const navigate = useNavigate();
   const role = localStorage.getItem("role");
 
   const handleLogout = () => {
     localStorage.removeItem("role");
-    localStorage.removeItem("isLoggedIn"); // ✅ Important
-    navigate("/"); // Better than window.location.href
+    localStorage.removeItem("isLoggedIn");
+    navigate("/");
   };
 
   return (
@@ -24,11 +27,13 @@ function Navbar() {
         alignItems: "center"
       }}
     >
-      <span>🏦 Banking AI Governance Dashboard</span>
+
+      <span>🏦{t.dashboardTitle}</span>
 
       <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+
         <span style={{ fontSize: "14px", opacity: 0.8 }}>
-          Role: {role}
+          {language === "en" ? "Role" : "పాత్ర"}: {role}
         </span>
 
         <button
@@ -45,9 +50,11 @@ function Navbar() {
           onMouseOver={(e) => (e.target.style.background = "#dc2626")}
           onMouseOut={(e) => (e.target.style.background = "#ef4444")}
         >
-          Logout
+          {language === "en" ? "Logout" : "లాగౌట్"}
         </button>
+
       </div>
+
     </div>
   );
 }

@@ -1,6 +1,10 @@
 import { NavLink } from "react-router-dom";
+import { translations } from "../translations";
 
-function Sidebar() {
+function Sidebar({ language }) {
+
+  const t = translations[language];
+
   const linkStyle = {
     display: "block",
     padding: "12px 20px",
@@ -24,13 +28,14 @@ function Sidebar() {
         paddingTop: "60px"
       }}
     >
+
       <NavLink
         to="/dashboard"
         style={({ isActive }) =>
           isActive ? { ...linkStyle, ...activeStyle } : linkStyle
         }
       >
-        Dashboard
+        {t.dashboard}
       </NavLink>
 
       <NavLink
@@ -39,7 +44,7 @@ function Sidebar() {
           isActive ? { ...linkStyle, ...activeStyle } : linkStyle
         }
       >
-        Loan Bias
+        {t.loanBias}
       </NavLink>
 
       <NavLink
@@ -48,10 +53,8 @@ function Sidebar() {
           isActive ? { ...linkStyle, ...activeStyle } : linkStyle
         }
       >
-        Fraud Monitor
+        {t.fraudMonitor}
       </NavLink>
-
-      {/* Loan Regulations Page */}
 
       <NavLink
         to="/loan-regulations"
@@ -59,18 +62,17 @@ function Sidebar() {
           isActive ? { ...linkStyle, ...activeStyle } : linkStyle
         }
       >
-        Loan Regulations
+        {t.loanRegulations}
       </NavLink>
-     
-     {/*Schemes */}
+
       <NavLink
-  to="/government-schemes"
-  style={({ isActive }) =>
-    isActive ? { ...linkStyle, ...activeStyle } : linkStyle
-  }
->
-  Government Schemes
-</NavLink>
+        to="/government-schemes"
+        style={({ isActive }) =>
+          isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+        }
+      >
+        {t.governmentSchemes}
+      </NavLink>
 
     </div>
   );

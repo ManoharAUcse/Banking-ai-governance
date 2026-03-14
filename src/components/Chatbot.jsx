@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 
-function Chatbot(){
+function Chatbot({ language }) {
 
 const [message,setMessage] = useState("")
 const [chat,setChat] = useState([])
@@ -13,13 +13,16 @@ const sendMessage = async (msg) => {
 const text = msg || message
 if(!text.trim()) return
 
+try{
+
 const res = await fetch("http://localhost:5001/chatbot",{
 method:"POST",
-headers:{
-"Content-Type":"application/json"
+headers : {
+    "Content-Type": "application/json"
 },
 body:JSON.stringify({
-message:text
+message:text,
+language:language
 })
 })
 
@@ -31,6 +34,20 @@ bot:data.reply
 }])
 
 setMessage("")
+
+}catch(error){
+
+console.error(error)
+
+setChat(prev => [...prev,{
+user:text,
+bot: language === "en"
+? "Chatbot error"
+: "చాట్‌బాట్ లోపం"
+}])
+
+}
+
 }
 
 const clearChat = () => {
@@ -47,7 +64,7 @@ const startVoice = () => {
 
 const recognition = new window.webkitSpeechRecognition()
 
-recognition.lang = "en-US"
+recognition.lang = language === "en" ? "en-US" : "te-IN"
 
 recognition.onresult = function(event){
 
@@ -82,7 +99,6 @@ background:"white",
 display:"flex",
 alignItems:"center",
 justifyContent:"center",
-color:"white",
 fontSize:"30px",
 cursor:"pointer",
 boxShadow:"0 10px 30px rgba(0,0,0,0.4)"
@@ -123,8 +139,15 @@ color:"white"
 }}>
 
 <div>
-<b>🤖 AI Loan Assistant</b>
-<div style={{fontSize:"12px",opacity:"0.8"}}>Online</div>
+<b>
+{language === "en"
+? "🤖 AI Loan Assistant"
+: "🤖 లోన్ సహాయకుడు"}
+</b>
+
+<div style={{fontSize:"12px",opacity:"0.8"}}>
+{language === "en" ? "Online" : "ఆన్‌లైన్"}
+</div>
 </div>
 
 <div>
@@ -228,7 +251,11 @@ background:"#1e293b"
 <input
 value={message}
 onChange={(e)=>setMessage(e.target.value)}
-placeholder="Ask about loans..."
+placeholder={
+language === "en"
+? "Ask about loans..."
+: "లోన్స్ గురించి అడగండి..."
+}
 style={{
 flex:1,
 padding:"10px",
