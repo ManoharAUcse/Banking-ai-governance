@@ -156,12 +156,13 @@ Policy analysis AI
 Model inference API
 
 Model files include:
-
 loanmodel.pkl
 loanmodel.py
 generatedataset.py
 policyanalysis.py
 mlapi.py
+
+
 🛠 Tech Stack
 Frontend
 React.js
@@ -252,6 +253,7 @@ ai-governance/
 │   └── index.css
 │
 └── README.md
+
 ⚙️ Installation & Setup
 1️⃣ Clone Repository
 git clone https://github.com/yourusername/ai-governance.git
@@ -294,3 +296,4 @@ transparency in AI decision making
 Bhoopathi Manohar
 Final Year Project
 AI Governance and Compliance for Banking Systems
+
