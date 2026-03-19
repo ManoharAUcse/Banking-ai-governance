@@ -1,23 +1,44 @@
 import pandas as pd
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 import pickle
 
-# Sample training data
-data = {
-    "income":[30000,50000,80000,40000,90000],
-    "credit_score":[600,650,750,580,800],
-    "loan_amount":[200000,300000,500000,150000,600000],
-    "approved":[0,1,1,0,1]
-}
+df = pd.read_csv("loan_dataset.csv")
 
-df = pd.DataFrame(data)
+# lowercase
+df.columns = df.columns.str.lower()
 
-X = df[["income","credit_score","loan_amount"]]
+# rename columns properly
+df.rename(columns={
+    "creditscore": "credit_score",
+    "loanamount": "loan_amount"
+}, inplace=True)
+
+# EMI
+df["emi"] = df["loan_amount"] / 120
+
+# ✅ FIXED approval logic (IMPORTANT)
+df["approved"] = df.apply(
+    lambda row: 1 if (row["emi"] <= row["income"] * 0.4 and row["credit_score"] > 650) else 0,
+    axis=1
+)
+
+# ✅ Check balance (VERY IMPORTANT)
+print("Class distribution:")
+print(df["approved"].value_counts())
+
+# Features
+X = df[["income", "credit_score", "loan_amount", "emi"]]
 y = df["approved"]
 
-model = LogisticRegression()
-model.fit(X,y)
+# Train model
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X, y)
 
-pickle.dump(model, open("loan_model.pkl","wb"))
+# Accuracy
+accuracy = model.score(X, y)
+print("Accuracy:", round(accuracy * 100, 2))
 
-print("Model trained and saved")
+# Save model
+pickle.dump(model, open("loan_model.pkl", "wb"))
+
+print("✅ Model trained")

@@ -31,7 +31,8 @@ function LoanRegulations() {
   { bank: "SBI", home: "8.4%", personal: "11.2%", vehicle: "9.1%", education: "9.2%", gold: "7.5%" },
   { bank: "HDFC", home: "8.6%", personal: "10.8%", vehicle: "9.3%", education: "9.5%", gold: "7.8%" },
   { bank: "ICICI", home: "8.7%", personal: "11.5%", vehicle: "9.4%", education: "9.7%", gold: "8.0%" },
-  { bank: "Axis", home: "8.8%", personal: "12%", vehicle: "9.5%", education: "9.8%", gold: "8.2%" }
+  { bank: "Axis", home: "8.8%", personal: "12%", vehicle: "9.5%", education: "9.8%", gold: "8.2%" },
+  { bank: "Union", home: "7.15%", personal: "8.75%", vehicle: "7.50%", education: "6,75%", gold: "9.80%" }
 ];
 
 

@@ -26,6 +26,8 @@ function RiskForm() {
   const [eligibleLoan, setEligibleLoan] = useState(null);
   const [recommendedLoan, setRecommendedLoan] = useState(null);
 
+  const [maxLoan, setMaxLoan] = useState(null);
+
   const [probability, setProbability] = useState(null);
   const [notification,setNotification] = useState("");
 
@@ -41,23 +43,21 @@ function RiskForm() {
 
   /* ---------------- AI RISK PREDICTION ---------------- */
 
-  
-
   const handleSubmit = () => {
 
     if (!income || !creditScore || !loanAmount) {
-      alert("Please fill Salary, Credit Score and Loan Amount");
+      alert("Please fill Salary, Credit score and Loan amount");
       return;
     }
 
-    axios
-      .post("http://localhost:5001/predict", {
-        income,
-        creditScore,
-        loanAmount,
-        employment
-      })
+axios.post("http://localhost:5001/predict", {
+  income: Number(income),
+  credit_score: Number(creditScore),   // ✅ FIXED
+  loan_amount: Number(loanAmount),     // ✅ FIXED
+  employment
+})
       .then((res) => {
+        console.log("API RESPONSE:", res.data); // 👈 ADD THIS
 
         setLoanId(res.data.loan_id);
         setRisk(res.data.risk);
@@ -128,21 +128,27 @@ function RiskForm() {
   };
 
   /* ---------------- AI LOAN RECOMMENDATION ---------------- */
+ const recommendLoan = () => {
 
-  const recommendLoan = () => {
+  const salary = Number(income);
 
-    const salary = Number(income);
+  if (!salary) {
+    alert("Enter salary first");
+    return;
+  }
 
-    if (!salary) {
-      alert("Enter salary first");
-      return;
-    }
+  const emi = salary * 0.4;
+  const tenure = 120;
 
-    const recommended = salary * 60;
+  const calculatedMaxLoan = emi * tenure;
 
-    setRecommendedLoan(Math.round(recommended));
-  };
+  setMaxLoan(calculatedMaxLoan);
 
+  // ✅ FINAL LOGIC (always safe)
+  const recommended = calculatedMaxLoan * 0.8;
+
+  setRecommendedLoan(Math.round(recommended));
+};
   /* ---------------- APPEAL ---------------- */
 
   const submitAppeal = async () => {
@@ -360,7 +366,7 @@ const analyzePolicy = async (e) => {
         <div style={{marginTop:"30px"}}>
 
           <h3>Decision: {decision}</h3>
-          <h3>Risk Level: {risk}</h3>
+          <p>Risk Level: {risk}</p>
           <h4>ML Model Accuracy: {score}%</h4>
 
           {probability && (

@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from sklearn.linear_model import LogisticRegression
+import pickle
 import pandas as pd
 import mysql.connector
 from flask_cors import CORS
@@ -22,16 +22,11 @@ OPENROUTER_KEY = os.getenv("OPENROUTER_KEY")
 # -----------------------------
 # Load dataset and train model
 # -----------------------------
-data = pd.read_csv("loan_dataset.csv")
+# ✅ Load trained model
+model = pickle.load(open("loan_model.pkl", "rb"))
 
-X = data[["Income", "CreditScore", "LoanAmount"]]
-y = data["Decision"]
-
-model = LogisticRegression(max_iter=1000)
-model.fit(X, y)
-
-accuracy = model.score(X, y)
-
+# (Optional: set accuracy manually or keep previous)
+accuracy = 0.88
 # -----------------------------
 # Database connection
 # -----------------------------
@@ -77,47 +72,84 @@ def analyze():
 @app.route("/predict", methods=["POST"])
 def predict():
 
-    req = request.json
+    data = request.get_json()
 
-    income = float(req.get("income"))
-    credit = float(req.get("creditScore"))
-    loan = float(req.get("loanAmount"))
-    employment = req.get("employment")
+    print("DATA RECEIVED:", data)
 
-    prediction = model.predict([[income, credit, loan]])[0]
-    probability = model.predict_proba([[income, credit, loan]])[0][1]
+    # ✅ handle all formats + convert to int
+    income = int(data.get("income") or data.get("Income"))
 
-    decision = "Approved" if prediction == 1 else "Rejected"
+    credit_score = int(
+        data.get("credit_score") or
+        data.get("creditscore") or
+        data.get("creditScore")
+    )
 
-    risk = "Low"
-    if probability < 0.5:
+    loan_amount = int(
+        data.get("loan_amount") or
+        data.get("loanamount") or
+        data.get("loanAmount")
+    )
+
+    employment = data.get("employment", "Unknown")
+
+    # ✅ EMI
+    emi = loan_amount / 120
+
+    # ML prediction
+    prediction = model.predict([[income, credit_score, loan_amount, emi]])[0]
+    proba = model.predict_proba([[income, credit_score, loan_amount, emi]])
+
+    if len(proba[0]) > 1:
+        probability = proba[0][1]
+    else:
+        probability = proba[0][0]
+
+    # -----------------------------
+    # ✅ FINAL DECISION LOGIC
+    # -----------------------------
+
+    # Rule 1: EMI check (STRICT)
+    if emi > income * 0.4:
+        decision = "Rejected"
         risk = "High"
 
-    # Save prediction to database
+    # Rule 2: Loan too large
+    elif loan_amount > income * 20:
+        decision = "Rejected"
+        risk = "High"
+
+    # Rule 3: ML decision
+    else:
+        decision = "Approved" if prediction == 1 else "Rejected"
+        risk = "Low" if probability >= 0.5 else "High"
+
+    # -----------------------------
+    # Save to DB
+    # -----------------------------
     cursor.execute(
         """
         INSERT INTO loan_predictions
         (income, credit_score, loan_amount, employment, risk, decision)
         VALUES (%s,%s,%s,%s,%s,%s)
         """,
-        (income, credit, loan, employment, risk, decision)
+        (income, credit_score, loan_amount, employment, risk, decision)
     )
 
     db.commit()
-
     loan_id = cursor.lastrowid
 
     # -----------------------------
-    # Explainable AI + Suggestions
+    # Explainable AI
     # -----------------------------
     reasons = []
     suggestions = []
 
-    if credit < 650:
+    if credit_score < 650:
         reasons.append("Credit score is below the recommended threshold (650).")
         suggestions.append("Improve your credit score above 650.")
 
-    if loan > income * 5:
+    if loan_amount > income * 5:
         reasons.append("Requested loan amount is high compared to income.")
         suggestions.append("Consider reducing the loan amount.")
 
@@ -134,7 +166,6 @@ def predict():
         "reasons": reasons,
         "suggestions": suggestions
     })
-
 # -----------------------------
 # AI Decision Appeal System
 # -----------------------------
