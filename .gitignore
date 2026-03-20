@@ -12,6 +12,10 @@ node_modules
 dist
 dist-ssr
 *.local
+backend
+.env
+ml
+.env
 #secrets
 
 
