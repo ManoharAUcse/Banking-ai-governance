@@ -65,7 +65,36 @@ def analyze():
     return jsonify({
         "analysis": result
     })
+    
+#analytics
 
+@app.route("/analytics", methods=["GET"])
+def analytics():
+    try:
+        cursor.execute("SELECT COUNT(*) FROM loan_predictions")
+        total = cursor.fetchone()[0]
+
+        cursor.execute("SELECT COUNT(*) FROM loan_predictions WHERE risk='High'")
+        high = cursor.fetchone()[0]
+
+        cursor.execute("SELECT COUNT(*) FROM loan_predictions WHERE risk='Low'")
+        low = cursor.fetchone()[0]
+
+        return jsonify({
+            "total": total,
+            "high": high,
+            "low": low,
+            "medium": 0
+        })
+
+    except Exception as e:
+        print("ANALYTICS ERROR:", e)
+        return jsonify({
+            "total": 0,
+            "high": 0,
+            "low": 0,
+            "medium": 0
+        })
 # -----------------------------
 # Loan Prediction API
 # -----------------------------

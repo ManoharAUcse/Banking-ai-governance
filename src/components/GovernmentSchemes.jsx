@@ -11,117 +11,91 @@ function GovernmentSchemes() {
     {
       name: "PM Mudra Loan",
       category: "Business Loan",
-      eligibility: "Small business owners & entrepreneurs",
-      benefit: "Loan up to ₹10 lakh without collateral",
+      eligibility: "Entrepreneurs",
+      benefit: "Loan up to ₹10 lakh",
       link: "https://www.mudra.org.in/"
     },
     {
       name: "Stand‑Up India Scheme",
-      category: "Startup / Business",
-      eligibility: "SC/ST & Women Entrepreneurs",
-      benefit: "Loan between ₹10 lakh – ₹1 crore",
+      category: "Startup Loan",
+      eligibility: "SC/ST & Women",
+      benefit: "₹10 lakh – ₹1 crore",
       link: "https://www.standupmitra.in/"
     },
     {
-      name: "Kisan Credit Card (KCC)",
+      name: "Kisan Credit Card",
       category: "Agricultural Loan",
-      eligibility: "Farmers & agricultural workers",
-      benefit: "Low interest crop loans",
+      eligibility: "Farmers",
+      benefit: "Low interest loans",
       link: "https://pmkisan.gov.in/"
     },
     {
-      name: "Education Loan Subsidy Scheme",
+      name: "Education Loan Subsidy",
       category: "Education Loan",
-      eligibility: "Students from economically weaker sections",
-      benefit: "Interest subsidy during study period",
+      eligibility: "Students",
+      benefit: "Interest subsidy",
       link: "https://www.vidyalakshmi.co.in/"
     }
   ];
 
   const bankSchemes = [
-    {
-      bank: "SBI",
-      scheme: "SBI Shaurya Home Loan",
-      target: "Defense Personnel",
-      benefit: "Lower interest rate"
-    },
-    {
-      bank: "HDFC",
-      scheme: "HDFC Reach Home Loan",
-      target: "Low income families",
-      benefit: "Affordable housing loan"
-    },
-    {
-      bank: "ICICI",
-      scheme: "ICICI Education Loan",
-      target: "Students",
-      benefit: "Flexible repayment"
-    },
-    {
-      bank: "Axis",
-      scheme: "Axis Bank Women Loan",
-      target: "Women Entrepreneurs",
-      benefit: "Special interest rate"
-    }
+    { bank: "SBI", scheme: "Shaurya Loan", target: "Defense", benefit: "Low interest" },
+    { bank: "HDFC", scheme: "Reach Loan", target: "Low income", benefit: "Affordable EMI" },
+    { bank: "ICICI", scheme: "Education Loan", target: "Students", benefit: "Flexible repayment" },
+    { bank: "Axis", scheme: "Women Loan", target: "Women", benefit: "Special rate" }
   ];
 
   return (
     <div style={containerStyle}>
 
-      <h1 style={{marginBottom:"30px"}}>
-        Government & Bank Loan Schemes
-      </h1>
+      <h1 style={titleStyle}>🏛️ Government Loan Schemes</h1>
 
-      {/* Government Schemes */}
+      {/* 🔥 SCHEME CARDS */}
+      <div style={grid}>
 
-      <div style={cardStyle}>
-        <h3>Government Loan Schemes</h3>
+        {schemes.map((scheme, index) => (
+          <div key={index} style={card}>
 
-        {schemes.map((scheme,index)=>(
-          <div key={index} style={{marginBottom:"20px"}}>
-            <h4>{scheme.name}</h4>
-            <p><b>Category:</b> {scheme.category}</p>
-            <p><b>Eligibility:</b> {scheme.eligibility}</p>
-            <p><b>Benefit:</b> {scheme.benefit}</p>
+            <h3>{scheme.name}</h3>
 
-            <a
-              href={scheme.link}
-              target="_blank"
-              rel="noreferrer"
-              style={{color:"#60a5fa"}}
-            >
-              View Official Scheme →
+            <p><b>📂 Category:</b> {scheme.category}</p>
+            <p><b>👤 Eligibility:</b> {scheme.eligibility}</p>
+            <p><b>💰 Benefit:</b> {scheme.benefit}</p>
+
+            <a href={scheme.link} target="_blank" rel="noreferrer" style={link}>
+              View Scheme →
             </a>
 
-            <hr style={{borderColor:"#334155"}} />
           </div>
         ))}
 
       </div>
 
-      {/* Bank Special Schemes */}
+      {/* 🔥 BANK TABLE */}
+      <div style={tableCard}>
 
-      <div style={cardStyle}>
-        <h3>Bank Special Loan Schemes</h3>
+        <h2 style={{ marginBottom: "20px", textAlign: "center" }}>
+          🏦 Bank Loan Schemes
+        </h2>
 
-        <table style={{width:"100%", borderCollapse:"collapse"}}>
+        <table style={table}>
 
           <thead>
-            <tr style={{background:"#0f172a"}}>
-              <th style={th}>Bank</th>
-              <th style={th}>Scheme</th>
-              <th style={th}>Target Group</th>
-              <th style={th}>Benefit</th>
+            <tr>
+              <th>Bank</th>
+              <th>Scheme</th>
+              <th>Target</th>
+              <th>Benefit</th>
             </tr>
           </thead>
 
           <tbody>
-            {bankSchemes.map((item,index)=>(
-              <tr key={index} style={{borderBottom:"1px solid #334155"}}>
-                <td style={td}>{item.bank}</td>
-                <td style={td}>{item.scheme}</td>
-                <td style={td}>{item.target}</td>
-                <td style={td}>{item.benefit}</td>
+            {bankSchemes.map((item, index) => (
+              <tr key={index} style={row}>
+                <td>{item.bank}</td>
+                <td>{item.scheme}</td>
+                <td>{item.target}</td>
+                <td style={{ color: "#22c55e" }}>{item.benefit}</td>
               </tr>
             ))}
           </tbody>
@@ -134,32 +108,67 @@ function GovernmentSchemes() {
   );
 }
 
-/* same UI layout as dashboard */
+/* ---------- STYLES ---------- */
 
 const containerStyle = {
   marginLeft: "240px",
   padding: "40px",
   minHeight: "100vh",
-  background: "linear-gradient(135deg,#0f172a,#1e293b)",
+  background: "linear-gradient(135deg,#020617,#0f172a,#020617)",
   color: "white"
 };
 
-const cardStyle = {
-  background: "rgba(30,41,59,0.6)",
-  backdropFilter: "blur(12px)",
-  padding: "30px",
-  borderRadius: "16px",
+const titleStyle = {
+  textAlign: "center",
   marginBottom: "30px",
-  boxShadow: "0 10px 30px rgba(0,0,0,0.3)"
+  fontSize: "28px",
+  fontWeight: "bold"
 };
 
-const th = {
-  padding: "12px",
-  textAlign: "left"
+/* GRID */
+const grid = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(300px,1fr))",
+  gap: "20px",
+  marginBottom: "40px"
 };
 
-const td = {
-  padding: "12px"
+/* CARD */
+const card = {
+  background: "rgba(30,41,59,0.6)",
+  backdropFilter: "blur(15px)",
+  padding: "25px",
+  borderRadius: "16px",
+  boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
+  transition: "0.3s"
+};
+
+/* LINK */
+const link = {
+  display: "inline-block",
+  marginTop: "10px",
+  color: "#60a5fa",
+  textDecoration: "none"
+};
+
+/* TABLE CARD */
+const tableCard = {
+  background: "rgba(30,41,59,0.6)",
+  backdropFilter: "blur(15px)",
+  padding: "25px",
+  borderRadius: "16px",
+  boxShadow: "0 10px 30px rgba(0,0,0,0.5)"
+};
+
+/* TABLE */
+const table = {
+  width: "100%",
+  borderCollapse: "collapse",
+  textAlign: "center"
+};
+
+const row = {
+  borderBottom: "1px solid #334155"
 };
 
 export default GovernmentSchemes;

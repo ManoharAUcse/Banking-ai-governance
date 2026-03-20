@@ -5,13 +5,14 @@ import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import Dashboard from "./components/Dashboard";
 import LoanBias from "./components/LoanBias";
-import FraudMonitor from "./components/FraudMonitor";
 import Login from "./components/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LoanRegulations from "./components/LoanRegulations";
 import GovernmentSchemes from "./components/GovernmentSchemes";
 import PolicyAnalyzer from "./components/PolicyAnalyzer";
 import Chatbot from "./components/Chatbot";
+import FraudMonitor from "./components/FraudMonitor";
+import Footer from "./components/Footer";
 
 function App() {
 
@@ -32,8 +33,8 @@ function App() {
         >
           తెలుగు
         </button>
-        
       </div>
+      
 
       <Routes>
 
@@ -46,8 +47,8 @@ function App() {
               <>
                 <Navbar language={language}/>
                 <Sidebar language={language}/>
-                <Dashboard language={language}/>
-                 <Chatbot language={language}/>
+                <Dashboard />
+                <Chatbot language={language}/>
               </>
             </ProtectedRoute>
           }
@@ -61,20 +62,20 @@ function App() {
                 <Navbar language={language}/>
                 <Sidebar language={language}/>
                 <LoanBias language={language}/>
-                 <Chatbot language={language}/>
+                <Chatbot language={language}/>
               </>
             </ProtectedRoute>
           }
         />
 
-        <Route
+<Route
           path="/fraud"
           element={
             <ProtectedRoute allowedRoles={["admin"]}>
               <>
                 <Navbar language={language}/>
                 <Sidebar language={language}/>
-                <FraudMonitor language={language}/>
+                <FraudMonitor/>
                  <Chatbot language={language}/>
               </>
             </ProtectedRoute>
@@ -89,7 +90,7 @@ function App() {
                 <Navbar language={language}/>
                 <Sidebar language={language}/>
                 <LoanRegulations language={language}/>
-                 <Chatbot language={language}/>
+                <Chatbot language={language}/>
               </>
             </ProtectedRoute>
           }
@@ -103,7 +104,7 @@ function App() {
                 <Navbar language={language}/>
                 <Sidebar language={language}/>
                 <GovernmentSchemes language={language}/>
-                 <Chatbot language={language}/>
+                <Chatbot language={language}/>
               </>
             </ProtectedRoute>
           }
@@ -125,9 +126,10 @@ function App() {
         <Route path="*" element={<Navigate to="/" />} />
 
       </Routes>
-
+<Footer />
     </BrowserRouter>
   );
+  
 }
 
 export default App;

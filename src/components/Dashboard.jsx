@@ -29,9 +29,7 @@ function Dashboard() {
         setLoading(false);
       });
 
-    /* -------- Fetch Analytics -------- */
-
-    fetch("http://localhost:5000/api/analytics")
+    fetch("http://localhost:5001/analytics")
       .then(res => res.json())
       .then(data => {
         setAnalytics(data);
@@ -43,25 +41,17 @@ function Dashboard() {
   return (
     <div style={containerStyle}>
 
-      <h1 style={titleStyle}>
-        AI Governance Dashboard
-      </h1>
+      <h1 style={titleStyle}>🚀 AI Governance Dashboard</h1>
 
-      {/* Governance Score Card */}
-
+      {/* 🔥 GOVERNANCE CARD */}
       {loading ? (
-
-        <div style={scoreCard}>
-          <h3>Loading Governance Score...</h3>
-        </div>
-
+        <div style={scoreCard}>Loading...</div>
       ) : score !== null && (
-
         <div style={scoreCard}>
-
           <h3>AI Governance Score</h3>
 
           <h1 style={{
+            fontSize: "40px",
             color:
               score > 85
                 ? "#22c55e"
@@ -69,126 +59,110 @@ function Dashboard() {
                 ? "#f59e0b"
                 : "#ef4444"
           }}>
-            {score} / 100
+            {score}
           </h1>
 
-          <p>AI system reliability and compliance rating</p>
-
+          <p>System compliance & reliability</p>
         </div>
-
       )}
 
-      {/* System Status Cards */}
+      {/* 🔥 STATS CARDS */}
+      <div style={statsContainer}>
 
-      <div style={{
-        display: "flex",
-        gap: "20px",
-        marginBottom: "30px",
-        flexWrap: "wrap"
-      }}>
-
-        <div style={{
-          background:"#1e293b",
-          padding:"20px",
-          borderRadius:"10px",
-          minWidth:"200px"
-        }}>
-          <h4>Total Predictions</h4>
-          <h2>{analytics.total}</h2>
-        </div>
-
-        <div style={{
-          background:"#1e293b",
-          padding:"20px",
-          borderRadius:"10px",
-          minWidth:"200px"
-        }}>
-          <h4>High Risk Loans</h4>
-          <h2 style={{color:"#ef4444"}}>{analytics.high}</h2>
-        </div>
-
-        <div style={{
-          background:"#1e293b",
-          padding:"20px",
-          borderRadius:"10px",
-          minWidth:"200px"
-        }}>
-          <h4>System Status</h4>
-          <h2 style={{color:"#22c55e"}}>Active</h2>
-        </div>
+        <StatCard title="Total Predictions" value={analytics.total} color="#3b82f6" />
+        <StatCard title="High Risk" value={analytics.high} color="#ef4444" />
+        <StatCard title="System Status" value="Active" color="#22c55e" />
 
       </div>
 
-      {/* Compliance Card */}
-
-      <div style={cardWrapper}>
+      {/* 🔥 COMPLIANCE */}
+      <div style={glassCard}>
         <ComplianceCard />
       </div>
 
-
-
-      {/* Loan Risk System */}
-
-      <div style={{ marginTop: "50px" }}>
-        <div style={glassCard}>
-          <RiskForm />
-        </div>
+      {/* 🔥 RISK FORM */}
+      <div style={glassCard}>
+        <RiskForm analytics={analytics} setAnalytics={setAnalytics} />
       </div>
 
-      {/* Risk Analytics Chart */}
-
-      <div style={{ marginTop: "50px" }}>
-        <div style={glassCard}>
-          <RiskAnalytics />
-        </div>
+      {/* 🔥 GRAPH */}
+      <div style={glassCard}>
+        <RiskAnalytics analytics={analytics} />
       </div>
 
-<Chatbot />
+      <Chatbot />
 
     </div>
   );
 }
 
-/* ---------- Styles ---------- */
+/* ---------- STAT CARD ---------- */
+
+function StatCard({ title, value, color }) {
+  return (
+    <div style={{
+      ...statCard,
+      border: `1px solid ${color}`
+    }}>
+      <h4>{title}</h4>
+      <h1 style={{ color }}>{value}</h1>
+    </div>
+  );
+}
+
+/* ---------- STYLES ---------- */
 
 const containerStyle = {
   marginLeft: "240px",
   padding: "40px",
   minHeight: "100vh",
-  background: "linear-gradient(135deg,#0f172a,#1e293b)",
+  background: "linear-gradient(135deg,#020617,#0f172a,#020617)",
   color: "white"
 };
 
 const titleStyle = {
   marginBottom: "30px",
-  fontWeight: "600",
-  letterSpacing: "1px"
+  fontWeight: "bold",
+  fontSize: "28px",
+  textAlign: "center"
 };
 
 const scoreCard = {
-  background: "#1e293b",
-  padding: "25px",
-  borderRadius: "12px",
+  background: "linear-gradient(135deg,#1e293b,#020617)",
+  padding: "30px",
+  borderRadius: "16px",
   marginBottom: "30px",
   maxWidth: "320px",
   textAlign: "center",
-  boxShadow: "0 10px 25px rgba(0,0,0,0.3)"
+  boxShadow: "0 10px 30px rgba(0,0,0,0.5)"
+};
+
+const statsContainer = {
+  display: "flex",
+  gap: "20px",
+  marginBottom: "30px",
+  flexWrap: "wrap",
+  justifyContent: "center"
+};
+
+const statCard = {
+  background: "rgba(30,41,59,0.6)",
+  padding: "25px",
+  borderRadius: "14px",
+  minWidth: "200px",
+  textAlign: "center",
+  backdropFilter: "blur(12px)",
+  boxShadow: "0 10px 25px rgba(0,0,0,0.4)",
+  transition: "0.3s"
 };
 
 const glassCard = {
+  marginTop: "30px",
   background: "rgba(30,41,59,0.6)",
-  backdropFilter: "blur(12px)",
+  backdropFilter: "blur(15px)",
   padding: "30px",
   borderRadius: "16px",
-  boxShadow: "0 10px 30px rgba(0,0,0,0.3)"
-};
-
-const cardWrapper = {
-  background: "rgba(30,41,59,0.6)",
-  backdropFilter: "blur(12px)",
-  padding: "30px",
-  borderRadius: "16px",
-  boxShadow: "0 10px 30px rgba(0,0,0,0.3)"
+  boxShadow: "0 10px 30px rgba(0,0,0,0.5)"
 };
 
 export default Dashboard;

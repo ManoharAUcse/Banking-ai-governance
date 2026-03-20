@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-function RiskForm() {
+function RiskForm({ analytics, setAnalytics }) {
 
   const [income, setIncome] = useState("");
   const [creditScore, setCreditScore] = useState("");
@@ -25,6 +25,7 @@ function RiskForm() {
 
   const [eligibleLoan, setEligibleLoan] = useState(null);
   const [recommendedLoan, setRecommendedLoan] = useState(null);
+  const [gender,setGender] = useState(null);
 
   const [maxLoan, setMaxLoan] = useState(null);
 
@@ -42,42 +43,58 @@ function RiskForm() {
 
 
   /* ---------------- AI RISK PREDICTION ---------------- */
+const handleSubmit = () => {
 
-  const handleSubmit = () => {
+  if (!income || !creditScore || !loanAmount) {
+    alert("Please fill Salary, Credit score and Loan amount");
+    return;
+  }
 
-    if (!income || !creditScore || !loanAmount) {
-      alert("Please fill Salary, Credit score and Loan amount");
-      return;
+  axios.post("http://localhost:5001/predict", {
+    income: Number(income),
+    credit_score: Number(creditScore),
+    loan_amount: Number(loanAmount),
+    employment
+  })
+  .then((res) => {
+
+    console.log("API RESPONSE:", res.data);
+
+    setLoanId(res.data.loan_id);
+    setRisk(res.data.risk);
+    setDecision(res.data.decision);
+    setScore(res.data.model_accuracy);
+    setProbability(res.data.probability);
+
+    setReasons(res.data.reasons || []);
+    setSuggestions(res.data.suggestions || []);
+
+    const combinedExplanation = [
+      ...(res.data.reasons || []),
+      ...(res.data.suggestions || [])
+    ];
+
+    setExplanation(combinedExplanation);
+
+    // 🔥 ADD THIS BLOCK (MAIN FIX)
+    if (setAnalytics) {
+      setAnalytics(prev => {
+        const newTotal = prev.total + 1;
+        const newHigh =
+          res.data.risk === "High" ? prev.high + 1 : prev.high;
+
+        return {
+          ...prev,
+          total: newTotal,
+          high: newHigh,
+          low: newTotal - newHigh
+        };
+      });
     }
 
-axios.post("http://localhost:5001/predict", {
-  income: Number(income),
-  credit_score: Number(creditScore),   // ✅ FIXED
-  loan_amount: Number(loanAmount),     // ✅ FIXED
-  employment
-})
-      .then((res) => {
-        console.log("API RESPONSE:", res.data); // 👈 ADD THIS
-
-        setLoanId(res.data.loan_id);
-        setRisk(res.data.risk);
-        setDecision(res.data.decision);
-        setScore(res.data.model_accuracy);
-        setProbability(res.data.probability);
-
-        setReasons(res.data.reasons || []);
-        setSuggestions(res.data.suggestions || []);
-
-        const combinedExplanation = [
-          ...(res.data.reasons || []),
-          ...(res.data.suggestions || [])
-        ];
-
-        setExplanation(combinedExplanation);
-
-      })
-      .catch((err) => console.log(err));
-  };
+  })
+  .catch((err) => console.log(err));
+};
 
   /* ---------------- EMI CALCULATION ---------------- */
 
@@ -258,6 +275,18 @@ const analyzePolicy = async (e) => {
 
       <br /><br />
 
+            <select
+        value={gender}
+        onChange={(e) => setGender(e.target.value)}
+      >
+        <option value="">Select Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Keep it private">Keep if private</option>
+      </select>
+
+      <br /><br />
+
       <input
         type="number"
         placeholder="Interest Rate (%)"
@@ -266,6 +295,7 @@ const analyzePolicy = async (e) => {
       />
 
       <br /><br />
+      
 
       <input
         type="number"

@@ -1,98 +1,85 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 
-function FraudMonitor() {
+function FraudMonitor({ analytics }) {
 
-  const [data, setData] = useState(null);
   const [animatedHigh, setAnimatedHigh] = useState(0);
 
+  const [localAnalytics, setLocalAnalytics] = useState({
+    total: 0,
+    high: 0,
+    medium: 0,
+    low: 0
+  });
+
   useEffect(() => {
+    if (!analytics) {
+      fetch("http://localhost:5001/analytics")
+        .then(res => res.json())
+        .then(data => setLocalAnalytics(data))
+        .catch(err => console.log(err));
+    }
+  }, [analytics]);
 
-    axios
-      .get("http://localhost:5000/api/fraud")
-      .then((res) => {
-
-        const apiData = res.data;
-
-        setData(apiData);
-
-        animateCounter(Number(apiData.high));
-
-      })
-      .catch((err) => console.log(err));
-
-  }, []);
-
-  const animateCounter = (target) => {
-
-    let start = 0;
-
-    const interval = setInterval(() => {
-
-      start += 1;
-      setAnimatedHigh(start);
-
-      if (start >= target) {
-        clearInterval(interval);
-      }
-
-    }, 40);
-
-  };
-
-  if (!data)
-    return <div style={loadingStyle}>Loading Fraud Intelligence...</div>;
-
-  const total = Number(data.total) || 0;
-  const high = Number(data.high) || 0;
-
+  const total = analytics?.total ?? localAnalytics.total;
+  const high = analytics?.high ?? localAnalytics.high;
   const safe = total - high;
 
   const percent = total ? ((high / total) * 100).toFixed(1) : 0;
 
+  const riskLevel =
+    high > 10 ? "High" : high > 5 ? "Medium" : "Low";
+
+  useEffect(() => {
+    setAnimatedHigh(0);
+    let start = 0;
+
+    const interval = setInterval(() => {
+      start += 1;
+      setAnimatedHigh(start);
+      if (start >= high) clearInterval(interval);
+    }, 20);
+
+    return () => clearInterval(interval);
+  }, [high]);
+
   return (
     <div style={containerStyle}>
 
-      <h1 style={titleStyle}>AI Fraud Intelligence Center</h1>
+      <h1 style={titleStyle}>🚨 AI Fraud Intelligence</h1>
 
+      {/* 🔥 RISK BADGE */}
       <div
         style={{
           ...badgeStyle,
           background:
-            data.fraudRiskLevel === "High"
-              ? "#ef4444"
-              : data.fraudRiskLevel === "Medium"
-              ? "#f59e0b"
-              : "#22c55e"
+            riskLevel === "High"
+              ? "linear-gradient(90deg,#ef4444,#dc2626)"
+              : riskLevel === "Medium"
+              ? "linear-gradient(90deg,#f59e0b,#d97706)"
+              : "linear-gradient(90deg,#22c55e,#16a34a)"
         }}
       >
-        {data.fraudRiskLevel} RISK
+        {riskLevel} RISK
       </div>
 
+      {/* 🔥 CARDS */}
       <div style={cardContainer}>
-        <GlassCard title="Total Predictions" value={total} />
-        <GlassCard title="High Risk Cases" value={animatedHigh} color="#ef4444" />
+        <GlassCard title="Total" value={total} />
+        <GlassCard title="High Risk" value={animatedHigh} color="#ef4444" />
         <GlassCard title="Safe Loans" value={safe} color="#22c55e" />
         <GlassCard title="Fraud %" value={`${percent}%`} color="#f59e0b" />
       </div>
 
-      {/* 🚨 Fraud Alert Banner */}
+      {/* 🚨 ALERT */}
       {high > 5 && (
-        <div style={{
-          background:"#ef4444",
-          padding:"12px",
-          marginTop:"20px",
-          borderRadius:"10px",
-          fontWeight:"bold",
-          textAlign:"center",
-          boxShadow:"0 5px 15px rgba(0,0,0,0.4)"
-        }}>
-          ⚠ Fraud Alert: High risk loan activity detected
+        <div style={alertStyle}>
+          ⚠ High fraud activity detected
         </div>
       )}
 
+      {/* 🔥 PROGRESS */}
       <div style={progressWrapper}>
-        <div style={progressLabel}>Fraud Risk Distribution</div>
+        <div style={progressLabel}>Fraud Distribution</div>
 
         <div style={progressBarBg}>
           <div
@@ -104,14 +91,15 @@ function FraudMonitor() {
         </div>
       </div>
 
-      <div style={{ marginTop: "50px", textAlign: "center" }}>
+      {/* 🔥 CIRCLE */}
+      <div style={circleWrapper}>
         <svg width="200" height="200">
 
           <circle
             cx="100"
             cy="100"
             r="80"
-            stroke="#334155"
+            stroke="#1e293b"
             strokeWidth="15"
             fill="none"
           />
@@ -120,7 +108,7 @@ function FraudMonitor() {
             cx="100"
             cy="100"
             r="80"
-            stroke="#ef4444"
+            stroke="url(#grad)"
             strokeWidth="15"
             fill="none"
             strokeDasharray={502}
@@ -129,13 +117,21 @@ function FraudMonitor() {
             style={{ transition: "1s ease" }}
           />
 
+          <defs>
+            <linearGradient id="grad">
+              <stop offset="0%" stopColor="#ef4444"/>
+              <stop offset="100%" stopColor="#f59e0b"/>
+            </linearGradient>
+          </defs>
+
           <text
             x="50%"
             y="50%"
             dominantBaseline="middle"
             textAnchor="middle"
             fill="white"
-            fontSize="24"
+            fontSize="26"
+            fontWeight="bold"
           >
             {percent}%
           </text>
@@ -143,66 +139,77 @@ function FraudMonitor() {
         </svg>
       </div>
 
-
     </div>
   );
 }
 
-/* ---------- Glass Card ---------- */
+/* ---------- CARD ---------- */
 
 function GlassCard({ title, value, color }) {
-
   return (
-    <div
-      style={{
-        ...glassCardStyle,
-        border: `1px solid ${color || "#334155"}`
-      }}
-    >
+    <div style={{
+      ...glassCardStyle,
+      border: `1px solid ${color || "#334155"}`
+    }}>
       <h4>{title}</h4>
-      <h2 style={{ color: color || "white" }}>{value}</h2>
+      <h1 style={{ color: color || "#38bdf8" }}>{value}</h1>
     </div>
   );
-
 }
 
-/* ---------- Styles ---------- */
+/* ---------- STYLES ---------- */
 
 const containerStyle = {
   marginLeft: "240px",
   padding: "40px",
   minHeight: "100vh",
-  background: "linear-gradient(135deg,#0f172a,#1e293b,#0f172a)",
-  color: "white"
+  background: "linear-gradient(135deg,#020617,#0f172a,#020617)",
+  color: "white",
+  animation: "fadeIn 0.5s ease"
 };
 
 const titleStyle = {
   marginBottom: "20px",
   fontWeight: "bold",
-  letterSpacing: "1px"
+  fontSize: "28px",
+  textAlign: "center"
 };
 
 const badgeStyle = {
   display: "inline-block",
-  padding: "8px 20px",
+  padding: "10px 25px",
   borderRadius: "30px",
   fontWeight: "bold",
-  marginBottom: "30px"
+  marginBottom: "30px",
+  boxShadow: "0 0 15px rgba(255,255,255,0.2)"
 };
 
 const cardContainer = {
   display: "flex",
   gap: "20px",
-  flexWrap: "wrap"
+  flexWrap: "wrap",
+  justifyContent: "center"
 };
 
 const glassCardStyle = {
-  backdropFilter: "blur(12px)",
-  background: "rgba(30,41,59,0.5)",
+  backdropFilter: "blur(15px)",
+  background: "rgba(30,41,59,0.6)",
   padding: "25px",
   borderRadius: "15px",
-  minWidth: "200px",
-  boxShadow: "0 10px 30px rgba(0,0,0,0.3)"
+  minWidth: "180px",
+  textAlign: "center",
+  boxShadow: "0 10px 25px rgba(0,0,0,0.5)",
+  transition: "0.3s"
+};
+
+const alertStyle = {
+  background: "linear-gradient(90deg,#ef4444,#b91c1c)",
+  padding: "12px",
+  marginTop: "25px",
+  borderRadius: "10px",
+  fontWeight: "bold",
+  textAlign: "center",
+  boxShadow: "0 0 20px rgba(239,68,68,0.6)"
 };
 
 const progressWrapper = {
@@ -210,12 +217,13 @@ const progressWrapper = {
 };
 
 const progressLabel = {
-  marginBottom: "10px"
+  marginBottom: "10px",
+  textAlign: "center"
 };
 
 const progressBarBg = {
   height: "20px",
-  background: "#334155",
+  background: "#1e293b",
   borderRadius: "10px",
   overflow: "hidden"
 };
@@ -226,12 +234,10 @@ const progressBarFill = {
   transition: "1s ease"
 };
 
-const loadingStyle = {
-  marginLeft: "240px",
-  padding: "40px",
-  minHeight: "100vh",
-  background: "#0f172a",
-  color: "white"
+const circleWrapper = {
+  marginTop: "50px",
+  display: "flex",
+  justifyContent: "center"
 };
 
 export default FraudMonitor;
