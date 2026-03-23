@@ -21,23 +21,33 @@ app.post("/api/login", (req, res) => {
     return res.status(400).json({ message: "Role is required" });
   }
 
-  const sql = "INSERT INTO users (role) VALUES (?)";
+  // ✅ Try DB but don't crash
+  try {
+    const sql = "INSERT INTO users (role) VALUES (?)";
 
-  db.query(sql, [role], (err) => {
+    db.query(sql, [role], (err) => {
+      if (err) {
+        console.error("DB Error:", err);
 
-    if (err) {
-      console.error("DB Error:", err);
+        // ✅ Always respond success (IMPORTANT)
+        return res.json({
+          message: "Login success (DB skipped)",
+          role
+        });
+      }
 
-      // ✅ IMPORTANT: Don't fail login
-      return res.json({
-        message: "Login success (DB skipped)",
-        role
-      });
-    }
+      res.json({ message: "Login recorded", role });
+    });
 
-    res.json({ message: "Login recorded", role });
+  } catch (error) {
+    console.error("Fatal Error:", error);
 
-  });
+    // ✅ fallback response
+    res.json({
+      message: "Login success (fallback)",
+      role
+    });
+  }
 });
 
 
