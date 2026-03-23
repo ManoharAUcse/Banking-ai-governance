@@ -22,22 +22,30 @@ OPENROUTER_KEY = os.getenv("OPENROUTER_KEY")
 # Load dataset and train model
 # -----------------------------
 # ✅ Load trained model
-model = pickle.load(open("loan_model.pkl", "rb"))
-
+try:
+    model = pickle.load(open("loan_model.pkl", "rb"))
+    print("Model loaded")
+except Exception as e:
+    print("MODEL ERROR:", e)
+    model = None
 # (Optional: set accuracy manually or keep previous)
 accuracy = 0.88
 # -----------------------------
 # Database connection
 # -----------------------------
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="Manohar@123",
-    database="loan_ai"
-)
-
-cursor = db.cursor()
-
+try:
+    db = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="Manohar@123",
+        database="loan_ai"
+    )
+    cursor = db.cursor()
+    print("DB Connected")
+except Exception as e:
+    print("DB ERROR:", e)
+    db = None
+    cursor = None
 # -----------------------------
 # Insurance Policy Analyzer API
 # -----------------------------
