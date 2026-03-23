@@ -9,7 +9,6 @@ from flask import request, jsonify
 from dotenv import load_dotenv
 import os
 
-
 # OCR + Policy Analysis
 from policy_analysis import extract_pdf_text, extract_image_text, analyze_policy
 
@@ -272,4 +271,5 @@ def chatbot():
 # Run Flask Server
 # -----------------------------
 if __name__ == "__main__":
-    app.run(port=5001)
+        port = int(os.environ.get("PORT", 5001))
+        app.run(host="0.0.0.0", port=port)
