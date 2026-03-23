@@ -9,22 +9,23 @@ function Login() {
   const handleLogin = async () => {
     if (!role) return alert("Please select a role");
 
-    try {
-      
-      const API = "https://banking-ai-governance-1.onrender.com";
+try {
+  const API = "https://banking-ai-governance-1.onrender.com";
 
-      await axios.post(`${API}/api/login`, { role });
+  const res = await axios.post(`${API}/api/login`, { role });
 
-      localStorage.setItem("role", role);
-      localStorage.setItem("isLoggedIn", "true");
+  console.log(res.data); // 👈 add this
 
-      if (role === "admin") navigate("/dashboard");
-      if (role === "auditor") navigate("/loan-bias");
+  localStorage.setItem("role", role);
+  localStorage.setItem("isLoggedIn", "true");
 
-    } catch (error) {
-      console.error("Login error:", error);
-      alert("Login failed");
-    }
+  if (role === "admin") navigate("/dashboard");
+  if (role === "auditor") navigate("/loan-bias");
+
+} catch (error) {
+  console.error("Login error:", error.response || error);
+  alert("Login failed");
+}
   };
 
   return (
