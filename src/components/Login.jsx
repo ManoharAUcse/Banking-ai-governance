@@ -10,7 +10,10 @@ function Login() {
     if (!role) return alert("Please select a role");
 
     try {
-      await axios.post("http://localhost:5000/api/login", { role });
+      
+      const API = "https://banking-ai-governance-1.onrender.com";
+
+      await axios.post(`${API}/api/login`, { role });
 
       localStorage.setItem("role", role);
       localStorage.setItem("isLoggedIn", "true");
