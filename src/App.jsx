@@ -34,46 +34,39 @@ function App() {
         </button>
       </div>
 
-      <Routes>
+     <Routes>
 
-        {/* Login */}
-        <Route path="/" element={<Login language={language} />} />
+  <Route path="/" element={<Login language={language} />} />
 
-        {/* ✅ COMMON LAYOUT (NO REPEAT) */}
-        <Route
-          element={
-            <ProtectedRoute allowedRoles={["admin","auditor"]}>
-              <MainLayout language={language} />
-            </ProtectedRoute>
-          }
-        >
+  {/* ✅ ADMIN ONLY */}
+  <Route
+    element={
+      <ProtectedRoute allowedRoles={["admin"]}>
+        <MainLayout language={language} />
+      </ProtectedRoute>
+    }
+  >
+    <Route path="/dashboard" element={<Dashboard />} />
+    <Route path="/loan-regulations" element={<LoanRegulations language={language} />} />
+    <Route path="/government-schemes" element={<GovernmentSchemes language={language} />} />
+    <Route path="/policy-analyzer" element={<PolicyAnalyzer language={language} />} />
+  </Route>
 
-          <Route path="/dashboard" element={<Dashboard />} />
+  {/* ✅ ADMIN + AUDITOR */}
+  <Route
+    element={
+      <ProtectedRoute allowedRoles={["admin","auditor"]}>
+        <MainLayout language={language} />
+      </ProtectedRoute>
+    }
+  >
+    <Route path="/loan-bias" element={<LoanBias language={language} />} />
+    <Route path="/fraud" element={<FraudMonitor />} />
+  </Route>
 
-          <Route path="/loan-bias" element={<LoanBias language={language} />} />
+  <Route path="*" element={<Navigate to="/" />} />
 
-          <Route path="/fraud" element={<FraudMonitor />} />
-
-          <Route
-            path="/loan-regulations"
-            element={<LoanRegulations language={language} />}
-          />
-
-          <Route
-            path="/government-schemes"
-            element={<GovernmentSchemes language={language} />}
-          />
-
-          <Route
-            path="/policy-analyzer"
-            element={<PolicyAnalyzer language={language} />}
-          />
-
-        </Route>
-
-        <Route path="*" element={<Navigate to="/" />} />
-
-      </Routes>
+</Routes>
 
       <Footer />
 

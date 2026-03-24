@@ -162,7 +162,7 @@ const handleSubmit = () => {
   setMaxLoan(calculatedMaxLoan);
 
   // ✅ FINAL LOGIC (always safe)
-  const recommended = calculatedMaxLoan * 0.8;
+  const recommended = calculatedMaxLoan * 0.6;
 
   setRecommendedLoan(Math.round(recommended));
 };

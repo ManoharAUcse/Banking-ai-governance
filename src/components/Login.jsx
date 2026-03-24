@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 function Login() {
   const [role, setRole] = useState("");
@@ -9,58 +10,101 @@ function Login() {
   const handleLogin = async () => {
     if (!role) return alert("Please select a role");
 
-try {
-  const API = "https://banking-ai-governance-1.onrender.com";
+    try {
+      const API = "https://banking-ai-governance-1.onrender.com";
 
-  const res = await axios.post(`${API}/api/login`, { role });
+      const res = await axios.post(`${API}/api/login`, { role });
 
-  console.log(res.data); // 👈 add this
+      console.log(res.data);
 
-  localStorage.setItem("role", role);
-  localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("role", role);
+      localStorage.setItem("isLoggedIn", "true");
 
-  if (role === "admin") navigate("/dashboard");
-  if (role === "auditor") navigate("/loan-bias");
+      if (role === "admin") navigate("/dashboard");
+      if (role === "auditor") navigate("/loan-bias");
 
-} catch (error) {
-  console.error("Login error:", error.response || error);
-  alert("Login failed");
-}
+    } catch (error) {
+      console.error("Login error:", error.response || error);
+      alert("Login failed");
+    }
   };
 
   return (
     <div style={container}>
 
-      {/* 🔥 BACKGROUND BLUR */}
+      {/* Glow */}
       <div style={bgGlow}></div>
 
-      {/* 🔥 LOGIN CARD */}
-      <div style={card}>
+      {/* Particles */}
+      <div className="particles"></div>
 
-        <h1 style={logo}>🏦</h1>
+      {/* Animated Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 60, scale: 0.9 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.6 }}
+        style={card}
+      >
 
-        <h2 style={title}>Banking AI</h2>
-        <p style={subtitle}>Secure AI Governance Platform</p>
+        <motion.h1
+          style={logo}
+          initial={{ rotate: -20, opacity: 0 }}
+          animate={{ rotate: 0, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+        >
+          🏦
+        </motion.h1>
 
-        {/* ROLE SELECT */}
-        <select
+        <motion.h2
+          style={title}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+          Banking AI
+        </motion.h2>
+
+        <motion.p
+          style={subtitle}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+        >
+          Secure AI Governance Platform
+        </motion.p>
+
+        {/* Select */}
+        <motion.select
           value={role}
           onChange={(e) => setRole(e.target.value)}
           style={input}
+          whileFocus={{ scale: 1.03 }}
         >
           <option value="">Select your role</option>
           <option value="admin">Admin</option>
           <option value="auditor">Auditor</option>
-        </select>
+        </motion.select>
 
-        {/* LOGIN BUTTON */}
-        <button onClick={handleLogin} style={button}>
+        {/* Button */}
+        <motion.button
+          onClick={handleLogin}
+          style={button}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
           Continue
-        </button>
+        </motion.button>
 
-        <p style={footer}>Powered by AI Governance System</p>
+        <motion.p
+          style={footer}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+        >
+          Powered by AI Governance System
+        </motion.p>
 
-      </div>
+      </motion.div>
     </div>
   );
 }
@@ -77,7 +121,6 @@ const container = {
   overflow: "hidden"
 };
 
-/* Glow background */
 const bgGlow = {
   position: "absolute",
   width: "400px",
@@ -88,17 +131,16 @@ const bgGlow = {
   left: "30%"
 };
 
-/* Glass card */
 const card = {
   backdropFilter: "blur(25px)",
   background: "rgba(255,255,255,0.05)",
   borderRadius: "20px",
   padding: "40px",
-  width: "320px",
+  width: "90%",
+  maxWidth: "350px",
   textAlign: "center",
   boxShadow: "0 20px 60px rgba(0,0,0,0.6)",
-  border: "1px solid rgba(255,255,255,0.1)",
-  animation: "fadeIn 0.6s ease"
+  border: "1px solid rgba(255,255,255,0.1)"
 };
 
 const logo = {
@@ -137,8 +179,7 @@ const button = {
   background: "linear-gradient(135deg,#3b82f6,#6366f1)",
   color: "white",
   fontWeight: "bold",
-  cursor: "pointer",
-  transition: "0.3s"
+  cursor: "pointer"
 };
 
 const footer = {

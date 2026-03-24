@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 function Sidebar({ language }) {
 
   const t = translations[language];
+  const role = localStorage.getItem("role");
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [open, setOpen] = useState(false);
@@ -69,11 +70,26 @@ function Sidebar({ language }) {
 
         <h2 style={logoStyle}>🤖 AI Panel</h2>
 
-        <NavItem to="/dashboard" label={t.dashboard} icon="📊" />
-        <NavItem to="/loan-bias" label={t.loanBias} icon="⚖️" />
-        <NavItem to="/fraud" label={t.fraudMonitor} icon="🚨" />
-        <NavItem to="/loan-regulations" label={t.loanRegulations} icon="📜" />
-        <NavItem to="/government-schemes" label={t.governmentSchemes} icon="🏛️" />
+        {/* ✅ ADMIN ONLY */}
+        {role === "admin" && (
+          <NavItem to="/dashboard" label={t.dashboard} icon="📊" />
+        )}
+
+        {/* ✅ ADMIN + AUDITOR */}
+        {(role === "admin" || role === "auditor") && (
+          <>
+            <NavItem to="/loan-bias" label={t.loanBias} icon="⚖️" />
+            <NavItem to="/fraud" label={t.fraudMonitor} icon="🚨" />
+          </>
+        )}
+
+        {/* ✅ ADMIN ONLY */}
+        {role === "admin" && (
+          <>
+            <NavItem to="/loan-regulations" label={t.loanRegulations} icon="📜" />
+            <NavItem to="/government-schemes" label={t.governmentSchemes} icon="🏛️" />
+          </>
+        )}
 
       </div>
     </>
