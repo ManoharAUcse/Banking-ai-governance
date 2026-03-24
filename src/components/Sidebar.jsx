@@ -1,22 +1,82 @@
 import { NavLink } from "react-router-dom";
 import { translations } from "../translations";
+import { useState, useEffect } from "react";
 
 function Sidebar({ language }) {
 
   const t = translations[language];
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
-    <div style={sidebarStyle}>
+    <>
+      {/* ☰ Toggle Button (only mobile) */}
+      {isMobile && (
+        <button
+          onClick={() => setOpen(!open)}
+          style={{
+            position: "fixed",
+            top: "15px",
+            left: "15px",
+            zIndex: 1100,
+            fontSize: "20px",
+            background: "#020617",
+            color: "white",
+            border: "none",
+            padding: "8px 12px",
+            borderRadius: "6px"
+          }}
+        >
+          ☰
+        </button>
+      )}
 
-      <h2 style={logoStyle}>🤖 AI Panel</h2>
+      {/* Overlay */}
+      {isMobile && open && (
+        <div
+          onClick={() => setOpen(false)}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(0,0,0,0.5)",
+            zIndex: 999
+          }}
+        />
+      )}
 
-      <NavItem to="/dashboard" label={t.dashboard} icon="📊" />
-      <NavItem to="/loan-bias" label={t.loanBias} icon="⚖️" />
-      <NavItem to="/fraud" label={t.fraudMonitor} icon="🚨" />
-      <NavItem to="/loan-regulations" label={t.loanRegulations} icon="📜" />
-      <NavItem to="/government-schemes" label={t.governmentSchemes} icon="🏛️" />
+      {/* Sidebar */}
+      <div
+        style={{
+          ...sidebarStyle,
+          left: isMobile ? (open ? "0" : "-240px") : "0",
+          transition: "0.3s",
+          zIndex: 1000
+        }}
+      >
 
-    </div>
+        <h2 style={logoStyle}>🤖 AI Panel</h2>
+
+        <NavItem to="/dashboard" label={t.dashboard} icon="📊" />
+        <NavItem to="/loan-bias" label={t.loanBias} icon="⚖️" />
+        <NavItem to="/fraud" label={t.fraudMonitor} icon="🚨" />
+        <NavItem to="/loan-regulations" label={t.loanRegulations} icon="📜" />
+        <NavItem to="/government-schemes" label={t.governmentSchemes} icon="🏛️" />
+
+      </div>
+    </>
   );
 }
 
