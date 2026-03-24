@@ -9,7 +9,6 @@ from flask import request, jsonify
 from dotenv import load_dotenv
 import os
 
-
 # OCR + Policy Analysis
 from policy_analysis import extract_pdf_text, extract_image_text, analyze_policy
 
@@ -23,22 +22,30 @@ OPENROUTER_KEY = os.getenv("OPENROUTER_KEY")
 # Load dataset and train model
 # -----------------------------
 # ✅ Load trained model
-model = pickle.load(open("loan_model.pkl", "rb"))
-
+try:
+    model = pickle.load(open("loan_model.pkl", "rb"))
+    print("Model loaded")
+except Exception as e:
+    print("MODEL ERROR:", e)
+    model = None
 # (Optional: set accuracy manually or keep previous)
 accuracy = 0.88
 # -----------------------------
 # Database connection
 # -----------------------------
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="Manohar@123",
-    database="loan_ai"
-)
-
-cursor = db.cursor()
-
+try:
+    db = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="Manohar@123",
+        database="loan_ai"
+    )
+    cursor = db.cursor()
+    print("DB Connected")
+except Exception as e:
+    print("DB ERROR:", e)
+    db = None
+    cursor = None
 # -----------------------------
 # Insurance Policy Analyzer API
 # -----------------------------
@@ -272,4 +279,5 @@ def chatbot():
 # Run Flask Server
 # -----------------------------
 if __name__ == "__main__":
-    app.run(port=5001)
+        port = int(os.environ.get("PORT", 5001))
+        app.run(host="0.0.0.0", port=port)
