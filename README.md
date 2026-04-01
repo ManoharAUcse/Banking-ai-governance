@@ -246,91 +246,140 @@ cd your-project
 npm install
 
 ✅ 🔹 CORE FRONTEND DEPENDENCIES
-
+```
 npm install react-router-dom
 npm install axios
+```
 
 👉 Used for:
 Routing
 API calls
 
 🎨 🔹 UI & ANIMATION
+```
 npm install framer-motion
-
+```
 👉 Used for:
 Animated login
 Smooth UI transitions
 
 🌐 🔹 ENV VARIABLES
+```
 npm install dotenv
-
+```
 👉 Used for:
 API URLs (no hardcoding)
 
 🎯 🔹 OPTIONAL (UI IMPROVEMENT)
+```
 npm install react-icons
-
+```
 👉 Used for:
 Sidebar icons
 Better UI
 
 🧠 🔹 FORM HANDLING (OPTIONAL)
+```
 npm install react-hook-form
-
+```
 👉 Used for:
 Clean form validation
 
 📊 🔹 CHARTS (IF USED)
+```
 npm install chart.js react-chartjs-2
-
+```
 👉 Used for:
 Dashboard graphs
 
 🔥 🔹 LOADING / UX (OPTIONAL)
+```
 npm install react-spinners
-
+```
 👉 Used for:
 Loading animations
 
 🧪 🔹 DEV TOOLS (OPTIONAL)
+```
 npm install -D nodemon
+```
 👉 Backend auto-restart
 
 🚀 BACKEND (Node.js)
+```
 cd backend
 npm init -y
+```
 
 ✅ BACKEND DEPENDENCIES
+```
 npm install express
 npm install cors
 npm install body-parser
 npm install dotenv
-
+```
 🔥 DATABASE
+```
 npm install mongoose
+```
 👉 MongoDB connection
 
 🔐 OPTIONAL SECURITY
+```
 npm install jsonwebtoken bcryptjs
+```
 👉 If auth added
 
 🧠 ML SIDE (PYTHON — NOT NPM)
+```
 pip install flask
 pip install scikit-learn pandas numpy
 pip install flask-cors
+```
 🎯 FINAL MINIMAL REQUIRED (IMPORTANT)
 👉 If you want only what you actually used, this is enough:
 
 Frontend:
+```
 npm install react-router-dom axios framer-motion
+```
 Backend:
+```
 npm install express cors dotenv mongoose
+```
 
 
 💥 PRO TIP
 👉 Check what you installed:
-
+```
 npm list --depth=0
+
+$ npm list --depth =0
+npm warn invalid config depth="=0" set in command line options
+npm warn invalid config Must be one of: null, numeric value
+ai-governance@0.0.0 C:\Users\BHOOPATHI MANOHAR\OneDrive\Desktop\3-1\ai governance and compilance\ai-governance
+├── @eslint/js@9.39.2
+├── @types/react-dom@19.2.3
+├── @types/react@19.2.14
+├── @vitejs/plugin-react@5.1.4
+├── axios@1.13.5
+├── chart.js@4.5.1
+├── eslint-plugin-react-hooks@7.0.1
+├── eslint-plugin-react-refresh@0.4.26
+├── eslint@9.39.2
+├── framer-motion@12.38.0
+├── globals@16.5.0
+├── i18next@25.8.20
+├── react-chartjs-2@5.3.1
+├── react-dom@19.2.4
+├── react-i18next@16.5.8
+├── react-icons@5.5.0
+├── react-router-dom@7.13.0
+├── react@19.2.4
+├── recharts@3.7.0
+└── vite@7.3.1
+```
+
 🎯 FINAL SUMMARY
 ✔ Routing → react-router-dom
 ✔ API → axios
