@@ -157,17 +157,47 @@ Female Approval Rate: 48%
 ---
 
 ## 📂 Project Structure
-*
-├── backend/
-├── ml/
-├── src/
+```
+ai-governance/
+│
+├── backend/ # Node.js backend (API)
+│ ├── controllers/
+│ ├── routes/
+│ ├── db.js
+│ └── server.js
+│
+├── ml/ # Machine Learning (Flask API)
+│ ├── loanmodel.py
+│ ├── loanmodel.pkl
+│ ├── generatedataset.py
+│ ├── policyanalysis.py
+│ ├── mlapi.py
+│ └── uploads/
+│
+├── src/ # Frontend (React)
 │ ├── components/
+│ │ ├── Dashboard.jsx
+│ │ ├── LoanBias.jsx
+│ │ ├── FraudMonitor.jsx
+│ │ ├── Chatbot.jsx
+│ │ ├── Sidebar.jsx
+│ │ ├── Navbar.jsx
+│ │ └── Login.jsx
+│ │
 │ ├── layouts/
+│ │ └── MainLayout.jsx
+│ │
 │ ├── App.jsx
+│ ├── main.jsx
+│ ├── translations.js
 │ └── index.css
+│
+├── public/
+│
+├── .env
+├── package.json
 └── README.md
-
----
+```
 
 ## ⚙️ Setup
 
