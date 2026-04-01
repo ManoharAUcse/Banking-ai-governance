@@ -156,7 +156,8 @@ Female Approval Rate: 48%
 
 ---
 
-* 📂 Project Structure
+## 📂 Project Structure
+*
 ├── backend/
 ├── ml/
 ├── src/
@@ -165,7 +166,6 @@ Female Approval Rate: 48%
 │ ├── App.jsx
 │ └── index.css
 └── README.md
-*
 
 ---
 
