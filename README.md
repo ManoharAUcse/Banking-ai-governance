@@ -1,299 +1,339 @@
-🏦 AI Governance & Compliance System for Banking
-An AI‑powered governance platform designed to monitor fairness, fraud risk, regulatory compliance, and policy analysis in banking systems.
 
-This system integrates Artificial Intelligence, Machine Learning, and Full‑Stack Web Development to ensure responsible and transparent AI decision‑making in financial institutions.
+# 🏦 AI Governance & Compliance System for Banking
 
-🚀 Key Features
-📊 Governance Dashboard
-A centralized dashboard for monitoring AI activities in banking.
+An AI-powered governance platform designed to ensure **fairness, transparency, fraud detection, and regulatory compliance** in AI-driven banking systems.
 
-Loan analytics
+This project integrates **Machine Learning, Full-Stack Development, and AI APIs** to build a real-world solution for responsible AI decision-making in financial institutions.
 
-Governance insights
+---
 
-Risk monitoring
+## 📌 Problem Statement
 
-Compliance tracking
+Modern banking systems increasingly rely on AI for loan approvals and risk analysis. However:
 
-⚖️ Loan Bias Detection
-Detects unfair AI decisions in loan approvals.
+- AI models may become biased  
+- Decisions lack transparency  
+- Fraud detection is complex  
+- Regulatory compliance is difficult to track  
 
-The system evaluates approval patterns across:
+👉 This project solves these issues by building a **centralized AI governance platform**.
 
-Gender
+---
 
-Income
+## 🚀 Key Features
 
-Employment type
+### 📊 Governance Dashboard
+- Loan analytics  
+- Governance insights  
+- Risk monitoring  
+- Compliance tracking  
 
-Credit score
+---
 
-Example output:
+### ⚖️ Loan Bias Detection
+Detects unfair AI decisions in loan approvals based on:
+- Gender  
+- Income  
+- Employment type  
+- Credit score  
 
+**Example Output:**
 Male Approval Rate: 72%
 Female Approval Rate: 48%
-
 ⚠ Potential Bias Detected
-This helps ensure fair and ethical AI usage.
 
-🔍 Fraud Monitoring
-Identifies suspicious loan applications and potential fraud patterns.
 
-The fraud detection module analyzes:
+---
 
-unusual application behavior
+### 🔍 Fraud Monitoring
+- Detects suspicious applications  
+- Identifies abnormal loan patterns  
+- Improves financial security  
 
-abnormal loan values
+---
 
-risky applicant profiles
+### 📄 AI Policy Analyzer
+- Upload PDF/Image policies  
+- Extract risks & compliance issues  
+- Generate safety score  
 
-This improves financial security and risk prevention.
+---
 
-📄 AI Policy Analyzer
-Allows users to upload loan or insurance policy documents and analyze them using AI.
+### 🤖 AI Chatbot
+- Answers banking queries  
+- Explains EMI, eligibility, documents  
+- Uses AI API for responses  
 
-The system extracts:
+---
 
-document type
+### 🌐 Multilingual Support
+- English  
+- Telugu  
 
-safety score
+---
 
-policy risks
+### 🏛 Government Schemes
+- PM Mudra Loan  
+- PMAY Housing  
+- Stand‑Up India  
 
-compliance issues
+---
 
-This helps banks maintain regulatory compliance.
+### 📊 Risk Analytics
+- Loan approval insights  
+- Risk probability  
+- ML predictions  
 
-🤖 AI Banking Chatbot
-An AI‑powered chatbot assistant integrated with the platform.
+---
 
-Users can ask questions such as:
+## 👥 Role-Based Access Control
 
-What is EMI?
-What documents are required for a home loan?
-Explain loan eligibility
-The chatbot uses an AI language model API to generate intelligent responses.
+### 👑 Admin
+- Full access to all modules  
+- Dashboard, Fraud, Bias, Policies  
 
-🌐 Multilingual Support
-The platform supports bilingual interaction.
+### 🔍 Auditor
+- Access only:
+  - Loan Bias  
+  - Fraud Monitoring  
 
-Languages supported:
+---
 
-English
+## 🎨 UI/UX (LATEST UPDATES 🔥)
 
-Telugu
+- 📱 Fully responsive (mobile + desktop)  
+- 🎬 Animated login page (Framer Motion)  
+- ✨ Glassmorphism UI  
+- 📂 Centralized layout (no repetition)  
+- ☰ Mobile sidebar toggle  
+- ⚡ Smooth animations  
 
-Users can switch languages using the language toggle.
+---
 
-🏛 Government Schemes Module
-Displays important government financial schemes.
+## 🧠 Machine Learning
 
-Examples include:
+- Loan Prediction Model  
+- Bias Detection  
+- Policy Analysis AI  
+- Dataset Generator  
 
-PM Mudra Loan
+---
 
-PMAY Housing Scheme
+## 🛠 Tech Stack
 
-Stand‑Up India Scheme
+### Frontend
+- React (Vite)
+- CSS (Responsive + Flexbox)
+- Framer Motion
 
-📊 Risk Analytics
-Analyzes loan risk and visualizes insights through dashboards.
+### Backend
+- Node.js
+- Express.js
 
-The system evaluates:
+### ML API
+- Python (Flask)
+- Scikit-learn
+- Pandas, NumPy
 
-loan approval patterns
+### Database
+- MongoDB
 
-risk probability
+---
 
-AI model predictions
+## 🌐 Deployment
 
-👥 Role‑Based Access Control
-The system provides two user roles.
+- Frontend → Vercel  
+- Backend → Render  
+- ML API → Render  
 
-👑 Admin
-Admin has full system access.
+---
 
-Admin can:
+## 🔗 Live Links
 
-Access dashboard
+- Frontend: https://your-vercel-link.vercel.app  
+- Backend: https://banking-ai-governance-1.onrender.com  
+- ML API: https://banking-ai-governance-ml.onrender.com  
 
-Run loan bias analysis
+---
 
-Monitor fraud detection
-
-Upload and analyze policies
-
-View loan regulations
-
-Manage governance modules
-
-🔍 Auditor
-Auditors monitor system fairness and compliance.
-
-Auditors can:
-
-Review loan bias results
-
-Monitor fraud reports
-
-Audit AI decision transparency
-
-Check regulatory compliance
-
-Auditors cannot modify system configurations.
-
-🧠 Machine Learning Module
-The system includes ML models for loan analysis.
-
-Key components:
-
-Loan prediction model
-
-Dataset generator
-
-Policy analysis AI
-
-Model inference API
-
-Model files include:
-loanmodel.pkl
-loanmodel.py
-generatedataset.py
-policyanalysis.py
-mlapi.py
-
-
-🛠 Tech Stack
-Frontend
-React.js
-
-Vite
-
-JavaScript
-
-CSS
-
-Backend
-Node.js
-
-Express.js
-
-Machine Learning
-Python
-
-Flask
-
-Scikit‑learn
-
-AI Integration
-AI Language Model API
-
-Policy document analysis
-
-Database
-MongoDB (via db.js)
-
-Version Control
-Git
-
-GitHub
-
-📂 Project Structure
-ai-governance/
-│
+## 📂 Project Structure
 ├── backend/
-│   ├── controllers/
-│   │   ├── fraudController.js
-│   │   └── loanController.js
-│   │
-│   ├── routes/
-│   │   ├── fraudRoute.js
-│   │   └── loanRoute.js
-│   │
-│   ├── db.js
-│   └── server.js
-│
 ├── ml/
-│   ├── generatedataset.py
-│   ├── loanmodel.pkl
-│   ├── loanmodel.py
-│   ├── mlapi.py
-│   ├── policyanalysis.py
-│   ├── uploads/
-│   └── .env
-│
-├── public/
-│   └── vite.svg
-│
 ├── src/
-│   ├── components/
-│   │   ├── Architecture.jsx
-│   │   ├── AuditLogs.jsx
-│   │   ├── Chatbot.jsx
-│   │   ├── ComplianceCard.jsx
-│   │   ├── Dashboard.jsx
-│   │   ├── FileUpload.jsx
-│   │   ├── FraudMonitor.jsx
-│   │   ├── GovernmentSchemes.jsx
-│   │   ├── LoanBias.jsx
-│   │   ├── Login.jsx
-│   │   ├── Navbar.jsx
-│   │   ├── PolicyAnalyzer.jsx
-│   │   ├── PredictionHistory.jsx
-│   │   ├── ProtectedRoutes.jsx
-│   │   ├── ResultsDashboard.jsx
-│   │   ├── RiskAnalytics.jsx
-│   │   ├── RiskForm.jsx
-│   │   └── Sidebar.jsx
-│   │
-│   ├── App.jsx
-│   ├── main.jsx
-│   ├── i18n.js
-│   ├── translations.js
-│   └── index.css
-│
+│ ├── components/
+│ ├── layouts/
+│ ├── App.jsx
+│ └── index.css
 └── README.md
 
-⚙️ Installation & Setup
-1️⃣ Clone Repository
+
+---
+
+## ⚙️ Setup
+
+```bash
 git clone https://github.com/yourusername/ai-governance.git
-2️⃣ Install Frontend Dependencies
+cd ai-governance
+
 npm install
-3️⃣ Start Frontend
 npm run dev
-Frontend runs on:
 
-http://localhost:5173
-4️⃣ Start Backend
 cd backend
+npm install
 node server.js
-5️⃣ Start ML API
+
 cd ml
+pip install -r requirements.txt
 python mlapi.py
-ML API runs on:
+```
+---
 
-http://localhost:5001
 🔐 Environment Variables
-Create a .env file inside the ml folder.
-
-Example:
-
+Create .env in ml folder:
 OPENROUTER_KEY=your_api_key
-⚠️ .env should be added to .gitignore for security.
 
-🎯 Project Objective
-The goal of this project is to develop a Responsible AI Governance System for Banking that ensures:
+🎯 Objective
+To build a Responsible AI Governance System that ensures:
 
-fairness in loan approval
+Fairness
 
-fraud detection
+Transparency
 
-regulatory compliance
+Fraud detection
 
-transparency in AI decision making
+Regulatory compliance
+
+🚀 Future Scope
+Advanced ML models
+
+Real-time alerts
+
+Notification system
+
+Cloud scaling
 
 👨‍💻 Author
 Bhoopathi Manohar
 Final Year Project
-AI Governance and Compliance for Banking Systems
 
+⭐ Conclusion
+A complete AI-powered banking governance system combining:
+
+✔ Machine Learning
+✔ Full-stack development
+✔ Responsible AI principles
+
+Designed for real-world financial transparency and compliance.
+
+
+---
+
+# 🚀 NEXT STEP
+
+```bash
+git add README.md
+git commit -m "final updated readme"
+git push origin main
+```
+
+---
+list of all dependencies to download:
+
+frontend:
+
+npm create vite@latest
+cd your-project
+npm install
+
+✅ 🔹 CORE FRONTEND DEPENDENCIES
+
+npm install react-router-dom
+npm install axios
+
+👉 Used for:
+Routing
+API calls
+
+🎨 🔹 UI & ANIMATION
+npm install framer-motion
+
+👉 Used for:
+Animated login
+Smooth UI transitions
+
+🌐 🔹 ENV VARIABLES
+npm install dotenv
+
+👉 Used for:
+API URLs (no hardcoding)
+
+🎯 🔹 OPTIONAL (UI IMPROVEMENT)
+npm install react-icons
+
+👉 Used for:
+Sidebar icons
+Better UI
+
+🧠 🔹 FORM HANDLING (OPTIONAL)
+npm install react-hook-form
+
+👉 Used for:
+Clean form validation
+
+📊 🔹 CHARTS (IF USED)
+npm install chart.js react-chartjs-2
+
+👉 Used for:
+Dashboard graphs
+
+🔥 🔹 LOADING / UX (OPTIONAL)
+npm install react-spinners
+
+👉 Used for:
+Loading animations
+
+🧪 🔹 DEV TOOLS (OPTIONAL)
+npm install -D nodemon
+👉 Backend auto-restart
+
+🚀 BACKEND (Node.js)
+cd backend
+npm init -y
+
+✅ BACKEND DEPENDENCIES
+npm install express
+npm install cors
+npm install body-parser
+npm install dotenv
+
+🔥 DATABASE
+npm install mongoose
+👉 MongoDB connection
+
+🔐 OPTIONAL SECURITY
+npm install jsonwebtoken bcryptjs
+👉 If auth added
+
+🧠 ML SIDE (PYTHON — NOT NPM)
+pip install flask
+pip install scikit-learn pandas numpy
+pip install flask-cors
+🎯 FINAL MINIMAL REQUIRED (IMPORTANT)
+👉 If you want only what you actually used, this is enough:
+
+Frontend:
+npm install react-router-dom axios framer-motion
+Backend:
+npm install express cors dotenv mongoose
+
+
+💥 PRO TIP
+👉 Check what you installed:
+
+npm list --depth=0
+🎯 FINAL SUMMARY
+✔ Routing → react-router-dom
+✔ API → axios
+✔ Animation → framer-motion
+✔ Backend → express
+✔ DB → mongoose
